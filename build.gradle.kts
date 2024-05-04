@@ -96,6 +96,7 @@ dependencies {
     implementation(libs.kotlinlogging)
     implementation(libs.lib.gem)
     implementation(libs.bundles.resilience4j)
+    implementation(libs.bundles.tika)
 
     testImplementation(testlibs.bundles.kotest.core)
     testImplementation(testlibs.bundles.kotest.extensions)
