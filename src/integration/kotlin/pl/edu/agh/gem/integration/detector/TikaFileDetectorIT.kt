@@ -47,18 +47,18 @@ class TikaFileDetectorIT(
         }
     }
 
-    should("detect correct size of file") {
+    should("detect correct media type of file") {
         // given
         val data = SMALL_FILE
 
         // when
-        val dataSize = fileDetector.getFileMediaType(data)
+        val mediatype = fileDetector.getFileMediaType(data)
 
         // then
-        dataSize shouldBe IMAGE_JPEG_VALUE
+        mediatype shouldBe IMAGE_JPEG_VALUE
     }
 
-    should("throw AttachmentContentTypeNotSupportedException when size is exceeded") {
+    should("throw AttachmentContentTypeNotSupportedException when content type is not supported") {
         // given
         val data = CSV_FILE
 

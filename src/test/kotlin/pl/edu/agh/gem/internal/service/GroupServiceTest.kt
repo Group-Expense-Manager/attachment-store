@@ -72,7 +72,7 @@ class GroupServiceTest : ShouldSpec({
         verify(groupAttachmentRepository, times(0)).save(any())
     }
 
-    should("throw an exception for unsupported content type") {
+    should("throw AttachmentSizeExceededException for exceeded file size") {
         // given
         val attachment = createGroupAttachment()
         val data = attachment.file.data

@@ -21,7 +21,7 @@ class GroupController(
 
     @PostMapping("/{groupId}", consumes = [APPLICATION_OCTET_STREAM_VALUE], produces = [APPLICATION_JSON_INTERNAL_VER_1])
     @ResponseStatus(CREATED)
-    fun createProduct(
+    fun saveAttachment(
         @RequestBody fileBytes: ByteArray,
         @GemUserId userId: String,
         @PathVariable groupId: String,
