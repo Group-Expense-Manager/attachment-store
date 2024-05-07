@@ -37,5 +37,4 @@ class ApiExceptionHandler {
     ): ResponseEntity<SimpleErrorsHolder> {
         return ResponseEntity(handleError(exception), UNSUPPORTED_MEDIA_TYPE)
     }
-    
 }

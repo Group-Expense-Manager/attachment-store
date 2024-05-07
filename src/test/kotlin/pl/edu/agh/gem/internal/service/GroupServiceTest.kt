@@ -43,17 +43,15 @@ class GroupServiceTest : ShouldSpec({
 
         // then
         verify(groupAttachmentRepository, times(1)).save(any())
-        groupAttachment.also {
-            it.id.shouldNotBeNull()
-            it.groupId shouldBe attachment.groupId
-            it.uploadedByUser shouldBe attachment.uploadedByUser
-            it.contentType shouldBe attachment.contentType
-            it.sizeInBytes shouldBe attachment.sizeInBytes
-            it.file shouldBe attachment.file
-            it.createdAt shouldBe attachment.createdAt
-            it.updatedAt shouldBe attachment.updatedAt
-            it.attachmentHistory shouldBe attachment.attachmentHistory
-        }
+        groupAttachment.id.shouldNotBeNull()
+        groupAttachment.groupId shouldBe attachment.groupId
+        groupAttachment.uploadedByUser shouldBe attachment.uploadedByUser
+        groupAttachment.contentType shouldBe attachment.contentType
+        groupAttachment.sizeInBytes shouldBe attachment.sizeInBytes
+        groupAttachment.file shouldBe attachment.file
+        groupAttachment.createdAt shouldBe attachment.createdAt
+        groupAttachment.updatedAt shouldBe attachment.updatedAt
+        groupAttachment.attachmentHistory shouldBe attachment.attachmentHistory
     }
 
     should("throw AttachmentContentTypeNotSupportedException for unsupported content type") {

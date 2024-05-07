@@ -38,16 +38,14 @@ class GroupAttachmentEntityTest : ShouldSpec({
         val groupAttachment = groupAttachmentEntity.toDomain()
 
         // then
-        groupAttachment.also {
-            it.id shouldBe groupAttachmentEntity.id
-            it.groupId shouldBe groupAttachmentEntity.groupId
-            it.uploadedByUser shouldBe groupAttachmentEntity.uploadedByUser
-            it.contentType shouldBe groupAttachmentEntity.contentType
-            it.sizeInBytes shouldBe groupAttachmentEntity.sizeInBytes
-            it.file shouldBe groupAttachmentEntity.file
-            it.createdAt shouldBe groupAttachmentEntity.createdAt
-            it.updatedAt shouldBe groupAttachmentEntity.updatedAt
-            it.attachmentHistory shouldBe groupAttachmentEntity.attachmentHistory.map { attachmentHistory -> attachmentHistory.toDomain() }
-        }
+        groupAttachment.id shouldBe groupAttachmentEntity.id
+        groupAttachment.groupId shouldBe groupAttachmentEntity.groupId
+        groupAttachment.uploadedByUser shouldBe groupAttachmentEntity.uploadedByUser
+        groupAttachment.contentType shouldBe groupAttachmentEntity.contentType
+        groupAttachment.sizeInBytes shouldBe groupAttachmentEntity.sizeInBytes
+        groupAttachment.file shouldBe groupAttachmentEntity.file
+        groupAttachment.createdAt shouldBe groupAttachmentEntity.createdAt
+        groupAttachment.updatedAt shouldBe groupAttachmentEntity.updatedAt
+        groupAttachment.attachmentHistory shouldBe groupAttachmentEntity.attachmentHistory.map { attachmentHistory -> attachmentHistory.toDomain() }
     }
 },)
