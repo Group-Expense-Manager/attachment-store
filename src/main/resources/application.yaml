@@ -14,3 +14,26 @@ resilience4j.retry:
         - org.springframework.web.client.HttpServerErrorException
         - java.io.IOException
       ignoreExceptions: []
+    groupManagerClient:
+      maxAttempts: 3
+      waitDuration: 100ms
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 2
+      retryExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - pl.edu.agh.gem.internal.client.RetryableGroupManagerClientException
+        - java.io.IOException
+      ignoreExceptions: [ ]
+
+attachment:
+  max-size: 5MB
+  allowed-type:
+    - image/jpeg
+    - image/jpg
+    - image/png
+    - image/bmp
+
+group-manager:
+  url: "group/manager/some/url"
+  read-timeout: 1000ms
+  connect-timeout: 1000ms

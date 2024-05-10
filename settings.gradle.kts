@@ -29,11 +29,15 @@ dependencyResolutionManagement {
 
         create("libs") {
             version("spring-boot", "3.2.3")
+            version("tika", "2.9.2")
             version("dependency-management", "1.1.4")
 
             library("guava", "com.google.guava:guava:33.1.0-jre")
             library("kotlinlogging", "io.github.microutils:kotlin-logging:3.0.5")
-            library("lib-gem", "pl.edu.agh.gem:lib-gem:0.1.2")
+            library("lib-gem", "pl.edu.agh.gem:lib-gem:0.1.4")
+
+            library("tika-parsers", "org.apache.tika", "tika-parsers").versionRef("tika")
+            library("tika-core", "org.apache.tika", "tika-core").versionRef("tika")
 
             version("resilience4j", "2.2.0")
             library("resilience4j-kotlin", "io.github.resilience4j", "resilience4j-kotlin").versionRef("resilience4j")
@@ -46,6 +50,14 @@ dependencyResolutionManagement {
                     "resilience4j-kotlin",
                     "resilience4j-retry",
                     "resilience4j-spring",
+                ),
+            )
+
+            bundle(
+                "tika",
+                listOf(
+                    "tika-core",
+                    "tika-parsers",
                 ),
             )
         }
