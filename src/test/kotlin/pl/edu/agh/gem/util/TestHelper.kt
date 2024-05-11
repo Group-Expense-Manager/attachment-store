@@ -12,6 +12,7 @@ import java.time.Instant
 import java.time.Instant.parse
 
 object TestHelper {
+    val LITTLE_FILE = "little-file".encodeToByteArray()
     val SMALL_FILE = loadResourceAsByteArray("small-image.jpg")
     val LARGE_FILE = loadResourceAsByteArray("large-image.jpg")
     val CSV_FILE = loadResourceAsByteArray("example.csv")

@@ -99,4 +99,19 @@ class GroupServiceTest : ShouldSpec({
         verify(groupManagerClient, atLeastOnce()).getGroupMembers(groupId)
         result shouldBe groupMembers
     }
+
+    should("get group attachment") {
+        // given
+        val groupId = GROUP_ID
+        val groupMembers = createGroupMembers()
+        val attachment = createGroupAttachment()
+        whenever(groupManagerClient.getGroupMembers(groupId)).thenReturn(groupMembers)
+        whenever(groupAttachmentRepository.getGroupAttachment(any(), any())).thenReturn(attachment)
+
+        // when
+        val result = groupService.getAttachment(groupId, attachment.id)
+
+        // then
+        result shouldBe attachment
+    }
 },)

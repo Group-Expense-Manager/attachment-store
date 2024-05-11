@@ -4,4 +4,5 @@ import pl.edu.agh.gem.internal.model.GroupAttachment
 
 interface GroupAttachmentRepository {
     fun save(groupAttachment: GroupAttachment): GroupAttachment
+    fun getGroupAttachment(attachmentId: String, groupId: String): GroupAttachment
 }
