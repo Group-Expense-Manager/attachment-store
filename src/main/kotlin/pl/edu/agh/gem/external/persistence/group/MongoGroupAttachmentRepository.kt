@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.query.isEqualTo
 import org.springframework.stereotype.Repository
 import pl.edu.agh.gem.internal.model.GroupAttachment
 import pl.edu.agh.gem.internal.persistence.GroupAttachmentRepository
+import pl.edu.agh.gem.internal.persistence.MissingGroupAttachmentException
 
 @Repository
 class MongoGroupAttachmentRepository(private val mongo: MongoTemplate) : GroupAttachmentRepository {
@@ -20,7 +21,3 @@ class MongoGroupAttachmentRepository(private val mongo: MongoTemplate) : GroupAt
         return mongo.findOne(query, GroupAttachmentEntity::class.java)?.toDomain() ?: throw MissingGroupAttachmentException(attachmentId, groupId)
     }
 }
-
-class MissingGroupAttachmentException(attachmentId: String, groupId: String) : RuntimeException(
-    "Attachment with id:$attachmentId in group:$groupId not found",
-)

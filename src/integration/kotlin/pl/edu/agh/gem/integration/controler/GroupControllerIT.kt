@@ -118,7 +118,7 @@ class GroupControllerIT(
         val user = createGemUser()
         val groupMembers = createGroupMembersResponse(user.id)
         val groupAttachment = createGroupAttachment(
-                file = Binary(LITTLE_FILE),
+            file = Binary(LITTLE_FILE),
         )
         repository.save(groupAttachment)
         stubGroupManagerMembers(groupMembers, groupAttachment.groupId, OK)
@@ -142,7 +142,7 @@ class GroupControllerIT(
         val user = createGemUser()
         val groupMembers = createGroupMembersResponse(OTHER_USER_ID)
         val groupAttachment = createGroupAttachment(
-                file = Binary(LITTLE_FILE),
+            file = Binary(LITTLE_FILE),
         )
         repository.save(groupAttachment)
         stubGroupManagerMembers(groupMembers, groupAttachment.groupId, OK)
