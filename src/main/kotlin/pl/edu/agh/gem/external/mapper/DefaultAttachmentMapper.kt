@@ -11,7 +11,6 @@ import pl.edu.agh.gem.internal.model.GroupAttachment
 class DefaultAttachmentMapper : AttachmentMapper {
     override fun mapToResponseEntity(attachment: GroupAttachment): HttpEntity<ByteArray> {
         val headers = HttpHeaders()
-        println("Mapping GroupAttachment to ResponseEntity: content type : ${attachment.contentType}")
         headers.set(CONTENT_TYPE, attachment.contentType)
         headers.set(CONTENT_LENGTH, attachment.sizeInBytes.toString())
         headers.set(CREATED_AT_HEADER, attachment.createdAt.toString())
