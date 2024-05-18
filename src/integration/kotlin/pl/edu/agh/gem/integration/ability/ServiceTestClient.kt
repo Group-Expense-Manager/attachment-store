@@ -18,9 +18,16 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
 
     fun createGroupAttachment(body: Any?, user: GemUser, groupId: String): ResponseSpec {
         return webClient.post()
-            .uri(URI("/external/attachments/groups/$groupId"))
+            .uri(URI("/external/groups/$groupId"))
             .headers { it.withValidatedUser(user) }
             .bodyValue(body)
+            .exchange()
+    }
+
+    fun getGroupAttachment(user: GemUser, groupId: String, attachmentId: String): ResponseSpec {
+        return webClient.get()
+            .uri(URI("/external/groups/$groupId/attachments/$attachmentId"))
+            .headers { it.withValidatedUser(user) }
             .exchange()
     }
 }

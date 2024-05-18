@@ -31,4 +31,8 @@ class GroupService(
         )
         return groupAttachmentRepository.save(groupAttachment)
     }
+
+    fun getAttachment(groupId: String, attachmentId: String): GroupAttachment {
+        return groupAttachmentRepository.getGroupAttachment(attachmentId, groupId)
+    }
 }
