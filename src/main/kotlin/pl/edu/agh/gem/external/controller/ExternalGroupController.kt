@@ -20,7 +20,7 @@ import pl.edu.agh.gem.security.GemUserId
 
 @RestController
 @RequestMapping("/external/groups")
-class GroupController(
+class ExternalGroupController(
     val groupService: GroupService,
     val attachmentMapper: AttachmentMapper,
 ) {

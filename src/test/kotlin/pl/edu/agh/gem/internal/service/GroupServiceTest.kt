@@ -16,6 +16,7 @@ import pl.edu.agh.gem.helper.group.DummyGroup.GROUP_ID
 import pl.edu.agh.gem.helper.group.createGroupMembers
 import pl.edu.agh.gem.internal.client.GroupManagerClient
 import pl.edu.agh.gem.internal.detector.FileDetector
+import pl.edu.agh.gem.internal.loader.FileLoader
 import pl.edu.agh.gem.internal.persistence.GroupAttachmentRepository
 import pl.edu.agh.gem.util.createGroupAttachment
 
@@ -23,10 +24,12 @@ class GroupServiceTest : ShouldSpec({
     val groupAttachmentRepository = mock<GroupAttachmentRepository>()
     val groupManagerClient = mock<GroupManagerClient> { }
     val fileDetector = mock<FileDetector> { }
+    val fileLoader = mock<FileLoader> { }
     val groupService = GroupService(
         groupAttachmentRepository = groupAttachmentRepository,
         groupManagerClient = groupManagerClient,
         fileDetector = fileDetector,
+        fileLoader = fileLoader,
     )
 
     should("save group attachment") {
@@ -113,5 +116,31 @@ class GroupServiceTest : ShouldSpec({
 
         // then
         result shouldBe attachment
+    }
+
+    should("generate group image") {
+        // given
+        val attachment = createGroupAttachment()
+        val data = attachment.file.data
+
+        whenever(fileDetector.getFileSize(data)).thenReturn(attachment.sizeInBytes)
+        whenever(fileDetector.getFileMediaType(data)).thenReturn(attachment.contentType)
+        whenever(fileLoader.loadRandomGroupImage()).thenReturn(attachment.file.data)
+        whenever(groupAttachmentRepository.save(any())).thenReturn(attachment)
+
+        // when
+        val groupAttachment = groupService.generateGroupImage(attachment.groupId, attachment.uploadedByUser)
+
+        // then
+        verify(groupAttachmentRepository, times(1)).save(any())
+        groupAttachment.id.shouldNotBeNull()
+        groupAttachment.groupId shouldBe attachment.groupId
+        groupAttachment.uploadedByUser shouldBe attachment.uploadedByUser
+        groupAttachment.contentType shouldBe attachment.contentType
+        groupAttachment.sizeInBytes shouldBe attachment.sizeInBytes
+        groupAttachment.file shouldBe attachment.file
+        groupAttachment.createdAt shouldBe attachment.createdAt
+        groupAttachment.updatedAt shouldBe attachment.updatedAt
+        groupAttachment.attachmentHistory shouldBe attachment.attachmentHistory
     }
 },)

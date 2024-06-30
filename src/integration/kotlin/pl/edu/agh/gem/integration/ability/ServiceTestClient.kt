@@ -30,4 +30,10 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
             .headers { it.withValidatedUser(user) }
             .exchange()
     }
+
+    fun generateGroupAttachment(userId: String, groupId: String): ResponseSpec {
+        return webClient.post()
+            .uri(URI("/internal/groups/$groupId/users/$userId/generate"))
+            .exchange()
+    }
 }
