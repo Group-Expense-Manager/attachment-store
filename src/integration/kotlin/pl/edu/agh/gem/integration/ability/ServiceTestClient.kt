@@ -5,10 +5,7 @@ import org.springframework.stereotype.Component
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec
 import org.springframework.test.web.servlet.client.MockMvcWebTestClient.bindToApplicationContext
 import org.springframework.web.context.WebApplicationContext
-import pl.edu.agh.gem.headers.HeadersUtils.withAppAcceptType
 import pl.edu.agh.gem.headers.HeadersUtils.withValidatedUser
-import pl.edu.agh.gem.paths.Paths.EXTERNAL
-import pl.edu.agh.gem.paths.Paths.INTERNAL
 import pl.edu.agh.gem.security.GemUser
 import java.net.URI
 
@@ -21,7 +18,7 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
 
     fun createGroupAttachment(body: Any?, user: GemUser, groupId: String): ResponseSpec {
         return webClient.post()
-            .uri(URI("$EXTERNAL/groups/$groupId"))
+            .uri(URI("/external/groups/$groupId"))
             .headers { it.withValidatedUser(user) }
             .bodyValue(body)
             .exchange()
@@ -29,23 +26,14 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
 
     fun getGroupAttachment(user: GemUser, groupId: String, attachmentId: String): ResponseSpec {
         return webClient.get()
-            .uri(URI("$EXTERNAL/groups/$groupId/attachments/$attachmentId"))
+            .uri(URI("/external/groups/$groupId/attachments/$attachmentId"))
             .headers { it.withValidatedUser(user) }
             .exchange()
     }
 
     fun generateGroupAttachment(userId: String, groupId: String): ResponseSpec {
         return webClient.post()
-            .uri(URI("$INTERNAL/groups/$groupId/users/$userId/generate"))
-            .headers { it.withAppAcceptType() }
-            .exchange()
-    }
-
-    fun updateGroupAttachment(body: Any?, user: GemUser, attachmentId: String, groupId: String): ResponseSpec {
-        return webClient.put()
-            .uri(URI("$EXTERNAL/groups/$groupId/attachments/$attachmentId"))
-            .headers { it.withValidatedUser(user) }
-            .bodyValue(body)
+            .uri(URI("/internal/groups/$groupId/users/$userId/generate"))
             .exchange()
     }
 }
