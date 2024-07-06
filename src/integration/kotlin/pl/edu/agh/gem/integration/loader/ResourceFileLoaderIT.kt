@@ -1,7 +1,6 @@
 package pl.edu.agh.gem.integration.loader
 
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.matchers.collections.shouldBeOneOf
 import io.kotest.matchers.shouldBe
 import org.mockito.kotlin.whenever
 import org.springframework.boot.test.mock.mockito.SpyBean
