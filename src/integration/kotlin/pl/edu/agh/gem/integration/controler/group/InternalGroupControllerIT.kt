@@ -1,4 +1,4 @@
-package pl.edu.agh.gem.integration.controler
+package pl.edu.agh.gem.integration.controler.group
 
 import io.kotest.matchers.nulls.shouldNotBeNull
 import org.springframework.http.HttpStatus.CREATED
