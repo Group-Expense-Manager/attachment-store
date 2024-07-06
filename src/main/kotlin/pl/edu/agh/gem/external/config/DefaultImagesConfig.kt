@@ -9,4 +9,5 @@ class GroupDefaultConfig
 @ConfigurationProperties(prefix = "default")
 data class DefaultImagesProperties(
     val group: Set<String>,
+    val user: Set<String>,
 )

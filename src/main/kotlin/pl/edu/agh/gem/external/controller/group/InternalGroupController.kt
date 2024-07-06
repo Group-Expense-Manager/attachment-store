@@ -1,4 +1,4 @@
-package pl.edu.agh.gem.external.controller
+package pl.edu.agh.gem.external.controller.group
 
 import org.springframework.http.HttpStatus.CREATED
 import org.springframework.web.bind.annotation.PathVariable

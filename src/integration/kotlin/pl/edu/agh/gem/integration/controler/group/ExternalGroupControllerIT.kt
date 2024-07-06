@@ -1,4 +1,4 @@
-package pl.edu.agh.gem.integration.controler
+package pl.edu.agh.gem.integration.controler.group
 
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -226,15 +226,15 @@ class ExternalGroupControllerIT(
         val groupId = GROUP_ID
         val groupMembers = createGroupMembersResponse(user.id)
         val attachment = createGroupAttachment(
-                groupId = groupId,
-                file = Binary(SMALL_FILE),
-                uploadedByUser = "uploadedByUser",
+            groupId = groupId,
+            file = Binary(SMALL_FILE),
+            uploadedByUser = "uploadedByUser",
         )
         val newAttachment = createGroupAttachment(
-                id = attachment.id,
-                groupId = attachment.groupId,
-                file = Binary(LARGE_FILE),
-                uploadedByUser = user.id,
+            id = attachment.id,
+            groupId = attachment.groupId,
+            file = Binary(LARGE_FILE),
+            uploadedByUser = user.id,
         )
         repository.save(attachment)
         stubGroupManagerMembers(groupMembers, groupId, OK)
@@ -252,15 +252,15 @@ class ExternalGroupControllerIT(
         val groupId = GROUP_ID
         val groupMembers = createGroupMembersResponse(user.id)
         val attachment = createGroupAttachment(
-                groupId = groupId,
-                file = Binary(SMALL_FILE),
-                uploadedByUser = "uploadedByUser",
+            groupId = groupId,
+            file = Binary(SMALL_FILE),
+            uploadedByUser = "uploadedByUser",
         )
         val newAttachment = createGroupAttachment(
-                id = attachment.id,
-                groupId = attachment.groupId,
-                file = Binary(CSV_FILE),
-                uploadedByUser = user.id,
+            id = attachment.id,
+            groupId = attachment.groupId,
+            file = Binary(CSV_FILE),
+            uploadedByUser = user.id,
         )
         repository.save(attachment)
         stubGroupManagerMembers(groupMembers, groupId, OK)
@@ -278,15 +278,15 @@ class ExternalGroupControllerIT(
         val groupId = GROUP_ID
         val groupMembers = createGroupMembersResponse(OTHER_USER_ID)
         val attachment = createGroupAttachment(
-                groupId = groupId,
-                file = Binary(SMALL_FILE),
-                uploadedByUser = "uploadedByUser",
+            groupId = groupId,
+            file = Binary(SMALL_FILE),
+            uploadedByUser = "uploadedByUser",
         )
         val newAttachment = createGroupAttachment(
-                id = attachment.id,
-                groupId = attachment.groupId,
-                file = Binary(OTHER_SMALL_FILE),
-                uploadedByUser = user.id,
+            id = attachment.id,
+            groupId = attachment.groupId,
+            file = Binary(OTHER_SMALL_FILE),
+            uploadedByUser = user.id,
         )
         stubGroupManagerMembers(groupMembers, groupId, OK)
         repository.save(attachment)

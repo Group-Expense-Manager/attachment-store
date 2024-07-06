@@ -4,54 +4,52 @@ import org.bson.types.Binary
 import org.springframework.stereotype.Service
 import pl.edu.agh.gem.internal.detector.FileDetector
 import pl.edu.agh.gem.internal.loader.FileLoader
-import pl.edu.agh.gem.internal.model.GroupAttachment
+import pl.edu.agh.gem.internal.model.UserAttachment
 import pl.edu.agh.gem.internal.model.createNewAttachmentHistory
-import pl.edu.agh.gem.internal.persistence.GroupAttachmentRepository
+import pl.edu.agh.gem.internal.persistence.UserAttachmentRepository
 import java.time.Instant.now
 
 @Service
-class GroupService(
-    private val groupAttachmentRepository: GroupAttachmentRepository,
+class UserService(
+    private val userAttachmentRepository: UserAttachmentRepository,
     private val fileDetector: FileDetector,
     private val fileLoader: FileLoader,
 ) {
-    fun saveAttachment(data: ByteArray, groupId: String, userId: String): GroupAttachment {
+    fun saveAttachment(data: ByteArray, userId: String): UserAttachment {
         val size = fileDetector.getFileSize(data)
         val contentType = fileDetector.getFileMediaType(data)
-        val groupAttachment = GroupAttachment(
-            groupId = groupId,
-            uploadedByUser = userId,
+        val groupAttachment = UserAttachment(
+            userId = userId,
             contentType = contentType,
             sizeInBytes = size,
             file = Binary(data),
             attachmentHistory = listOf(createNewAttachmentHistory(userId, size, contentType)),
         )
-        return groupAttachmentRepository.save(groupAttachment)
+        return userAttachmentRepository.save(groupAttachment)
     }
 
-    fun updateAttachment(data: ByteArray, attachmentId: String, groupId: String, userId: String): GroupAttachment {
-        val attachment = getAttachment(groupId, attachmentId)
+    fun updateAttachment(data: ByteArray, attachmentId: String, userId: String): UserAttachment {
+        val attachment = getAttachment(userId, attachmentId)
         val size = fileDetector.getFileSize(data)
         val contentType = fileDetector.getFileMediaType(data)
 
         val updatedAttachment = attachment.copy(
             file = Binary(data),
-            uploadedByUser = userId,
             sizeInBytes = size,
             contentType = contentType,
             updatedAt = now(),
             attachmentHistory = attachment.attachmentHistory + createNewAttachmentHistory(userId, size, contentType),
         )
 
-        return groupAttachmentRepository.save(updatedAttachment)
+        return userAttachmentRepository.save(updatedAttachment)
     }
 
-    fun getAttachment(groupId: String, attachmentId: String): GroupAttachment {
-        return groupAttachmentRepository.getGroupAttachment(attachmentId, groupId)
+    fun getAttachment(userId: String, attachmentId: String): UserAttachment {
+        return userAttachmentRepository.getUserAttachment(attachmentId, userId)
     }
 
-    fun generateGroupImage(groupId: String, userId: String): GroupAttachment {
+    fun generateUserImage(userId: String): UserAttachment {
         val generateImage = fileLoader.loadRandomGroupImage()
-        return saveAttachment(generateImage, groupId, userId)
+        return saveAttachment(generateImage, userId)
     }
 }

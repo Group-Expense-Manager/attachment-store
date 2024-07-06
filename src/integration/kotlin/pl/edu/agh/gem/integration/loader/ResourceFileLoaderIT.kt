@@ -34,4 +34,24 @@ class ResourceFileLoaderIT(
         // when && then
         shouldThrow<ResourceFileLoaderException> { fileLoader.loadRandomGroupImage() }
     }
+
+    should("load random user image") {
+        // given
+        whenever(defaultImagesProperties.user).thenReturn(setOf("user-default-0.jpeg"))
+        val expectedAttachment = loadResourceAsByteArray("images/user/${defaultImagesProperties.user.first()}")
+
+        // when
+        val result = fileLoader.loadRandomUserImage()
+
+        // then
+        result.shouldBe(expectedAttachment)
+    }
+
+    should("throw ResourceFileLoaderException on trying to load random user image when image dont exist") {
+        // given
+        whenever(defaultImagesProperties.user).thenReturn(setOf("user-no-default-0.jpeg"))
+
+        // when && then
+        shouldThrow<ResourceFileLoaderException> { fileLoader.loadRandomUserImage() }
+    }
 },)

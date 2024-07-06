@@ -16,38 +16,37 @@ import pl.edu.agh.gem.external.detector.AttachmentSizeExceededException
 import pl.edu.agh.gem.helper.group.DummyGroup.GROUP_ID
 import pl.edu.agh.gem.internal.detector.FileDetector
 import pl.edu.agh.gem.internal.loader.FileLoader
-import pl.edu.agh.gem.internal.persistence.GroupAttachmentRepository
+import pl.edu.agh.gem.internal.persistence.UserAttachmentRepository
 import pl.edu.agh.gem.util.TestHelper.OTHER_SMALL_FILE
 import pl.edu.agh.gem.util.TestHelper.SMALL_FILE
-import pl.edu.agh.gem.util.createGroupAttachment
+import pl.edu.agh.gem.util.createUserAttachment
 
-class GroupServiceTest : ShouldSpec({
-    val groupAttachmentRepository = mock<GroupAttachmentRepository>()
+class UserServiceTest : ShouldSpec({
+    val userAttachmentRepository = mock<UserAttachmentRepository>()
     val fileDetector = mock<FileDetector> { }
     val fileLoader = mock<FileLoader> { }
-    val groupService = GroupService(
-        groupAttachmentRepository = groupAttachmentRepository,
+    val userService = UserService(
+        userAttachmentRepository = userAttachmentRepository,
         fileDetector = fileDetector,
         fileLoader = fileLoader,
     )
 
-    should("save group attachment") {
+    should("save user attachment") {
         // given
-        val attachment = createGroupAttachment()
+        val attachment = createUserAttachment()
         val data = attachment.file.data
 
         whenever(fileDetector.getFileSize(data)).thenReturn(attachment.sizeInBytes)
         whenever(fileDetector.getFileMediaType(data)).thenReturn(attachment.contentType)
-        whenever(groupAttachmentRepository.save(any())).thenReturn(attachment)
+        whenever(userAttachmentRepository.save(any())).thenReturn(attachment)
 
         // when
-        val groupAttachment = groupService.saveAttachment(data, attachment.groupId, attachment.uploadedByUser)
+        val groupAttachment = userService.saveAttachment(data, attachment.userId)
 
         // then
-        verify(groupAttachmentRepository, times(1)).save(any())
+        verify(userAttachmentRepository, times(1)).save(any())
         groupAttachment.id.shouldNotBeNull()
-        groupAttachment.groupId shouldBe attachment.groupId
-        groupAttachment.uploadedByUser shouldBe attachment.uploadedByUser
+        groupAttachment.userId shouldBe attachment.userId
         groupAttachment.contentType shouldBe attachment.contentType
         groupAttachment.sizeInBytes shouldBe attachment.sizeInBytes
         groupAttachment.file shouldBe attachment.file
@@ -58,67 +57,66 @@ class GroupServiceTest : ShouldSpec({
 
     should("throw AttachmentContentTypeNotSupportedException for unsupported content type") {
         // given
-        val attachment = createGroupAttachment()
+        val attachment = createUserAttachment()
         val data = attachment.file.data
 
         whenever(fileDetector.getFileSize(data)).thenReturn(attachment.sizeInBytes)
         whenever(fileDetector.getFileMediaType(data)).thenThrow(AttachmentContentTypeNotSupportedException("content-type"))
-        whenever(groupAttachmentRepository.save(any())).thenReturn(attachment)
+        whenever(userAttachmentRepository.save(any())).thenReturn(attachment)
 
         // When & Then
         shouldThrow<AttachmentContentTypeNotSupportedException> {
-            groupService.saveAttachment(data, attachment.groupId, attachment.uploadedByUser)
+            userService.saveAttachment(data, attachment.userId)
         }
-        verify(groupAttachmentRepository, times(0)).save(any())
+        verify(userAttachmentRepository, times(0)).save(any())
     }
 
     should("throw AttachmentSizeExceededException for exceeded file size") {
         // given
-        val attachment = createGroupAttachment()
+        val attachment = createUserAttachment()
         val data = attachment.file.data
 
         whenever(fileDetector.getFileSize(data)).thenThrow(AttachmentSizeExceededException(1))
         whenever(fileDetector.getFileMediaType(data)).thenReturn(attachment.contentType)
-        whenever(groupAttachmentRepository.save(any())).thenReturn(attachment)
+        whenever(userAttachmentRepository.save(any())).thenReturn(attachment)
 
         // When & Then
         shouldThrow<AttachmentSizeExceededException> {
-            groupService.saveAttachment(data, attachment.groupId, attachment.uploadedByUser)
+            userService.saveAttachment(data, attachment.userId)
         }
-        verify(groupAttachmentRepository, times(0)).save(any())
+        verify(userAttachmentRepository, times(0)).save(any())
     }
 
-    should("get group attachment") {
+    should("get user attachment") {
         // given
         val groupId = GROUP_ID
-        val attachment = createGroupAttachment()
-        whenever(groupAttachmentRepository.getGroupAttachment(any(), any())).thenReturn(attachment)
+        val attachment = createUserAttachment()
+        whenever(userAttachmentRepository.getUserAttachment(any(), any())).thenReturn(attachment)
 
         // when
-        val result = groupService.getAttachment(groupId, attachment.id)
+        val result = userService.getAttachment(groupId, attachment.id)
 
         // then
         result shouldBe attachment
     }
 
-    should("generate group image") {
+    should("generate user image") {
         // given
-        val attachment = createGroupAttachment()
+        val attachment = createUserAttachment()
         val data = attachment.file.data
 
         whenever(fileDetector.getFileSize(data)).thenReturn(attachment.sizeInBytes)
         whenever(fileDetector.getFileMediaType(data)).thenReturn(attachment.contentType)
         whenever(fileLoader.loadRandomGroupImage()).thenReturn(attachment.file.data)
-        whenever(groupAttachmentRepository.save(any())).thenReturn(attachment)
+        whenever(userAttachmentRepository.save(any())).thenReturn(attachment)
 
         // when
-        val groupAttachment = groupService.generateGroupImage(attachment.groupId, attachment.uploadedByUser)
+        val groupAttachment = userService.generateUserImage(attachment.userId)
 
         // then
-        verify(groupAttachmentRepository, times(1)).save(any())
+        verify(userAttachmentRepository, times(1)).save(any())
         groupAttachment.id.shouldNotBeNull()
-        groupAttachment.groupId shouldBe attachment.groupId
-        groupAttachment.uploadedByUser shouldBe attachment.uploadedByUser
+        groupAttachment.userId shouldBe attachment.userId
         groupAttachment.contentType shouldBe attachment.contentType
         groupAttachment.sizeInBytes shouldBe attachment.sizeInBytes
         groupAttachment.file shouldBe attachment.file
@@ -127,42 +125,40 @@ class GroupServiceTest : ShouldSpec({
         groupAttachment.attachmentHistory shouldBe attachment.attachmentHistory
     }
 
-    should("update group attachment") {
+    should("update user attachment") {
         // given
-        val attachment = createGroupAttachment(
+        val attachment = createUserAttachment(
             file = Binary(SMALL_FILE),
-            uploadedByUser = "uploadedByUser",
+            userId = "userId",
         )
-        val newAttachment = createGroupAttachment(
+        val newAttachment = createUserAttachment(
             id = attachment.id,
-            groupId = attachment.groupId,
             file = Binary(OTHER_SMALL_FILE),
-            uploadedByUser = "otherUser",
+            userId = "userId",
         )
 
         val data = newAttachment.file.data
         whenever(fileDetector.getFileSize(data)).thenReturn(newAttachment.sizeInBytes)
         whenever(fileDetector.getFileMediaType(data)).thenReturn(newAttachment.contentType)
-        whenever(groupAttachmentRepository.save(any())).thenReturn(newAttachment)
-        whenever(groupAttachmentRepository.getGroupAttachment(attachment.id, attachment.groupId)).thenReturn(attachment)
+        whenever(userAttachmentRepository.save(any())).thenReturn(newAttachment)
+        whenever(userAttachmentRepository.getUserAttachment(attachment.id, attachment.userId)).thenReturn(attachment)
 
         // when
-        val groupAttachment = groupService.updateAttachment(data, newAttachment.id, newAttachment.groupId, newAttachment.uploadedByUser)
+        val groupAttachment = userService.updateAttachment(data, newAttachment.id, newAttachment.userId)
 
         // then
-        verify(groupAttachmentRepository, times(1)).getGroupAttachment(attachment.id, attachment.groupId)
-        verify(groupAttachmentRepository, times(1)).save(
+        verify(userAttachmentRepository, times(1)).getUserAttachment(attachment.id, attachment.userId)
+        verify(userAttachmentRepository, times(1)).save(
             argThat { a ->
                 a.file == newAttachment.file &&
-                    a.uploadedByUser == newAttachment.uploadedByUser &&
+                    a.userId == newAttachment.userId &&
                     a.sizeInBytes == newAttachment.sizeInBytes &&
                     a.contentType == newAttachment.contentType &&
                     a.attachmentHistory.size == 2
             },
         )
         groupAttachment.id.shouldNotBeNull()
-        groupAttachment.groupId shouldBe newAttachment.groupId
-        groupAttachment.uploadedByUser shouldBe newAttachment.uploadedByUser
+        groupAttachment.userId shouldBe newAttachment.userId
         groupAttachment.contentType shouldBe newAttachment.contentType
         groupAttachment.sizeInBytes shouldBe newAttachment.sizeInBytes
         groupAttachment.file shouldBe newAttachment.file
