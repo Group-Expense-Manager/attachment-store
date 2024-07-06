@@ -36,4 +36,12 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
             .uri(URI("/internal/groups/$groupId/users/$userId/generate"))
             .exchange()
     }
+
+    fun updateGroupAttachment(body: Any?, user: GemUser, attachmentId: String, groupId: String): ResponseSpec {
+        return webClient.put()
+            .uri(URI("/external/groups/$groupId/attachments/$attachmentId"))
+            .headers { it.withValidatedUser(user) }
+            .bodyValue(body)
+            .exchange()
+    }
 }
