@@ -14,6 +14,7 @@ import java.time.Instant.parse
 object TestHelper {
     val LITTLE_FILE = "little-file".encodeToByteArray()
     val SMALL_FILE = loadResourceAsByteArray("small-image.jpg")
+    val OTHER_SMALL_FILE = loadResourceAsByteArray("other-small-image.jpg")
     val LARGE_FILE = loadResourceAsByteArray("large-image.jpg")
     val CSV_FILE = loadResourceAsByteArray("example.csv")
     val EMPTY_FILE = byteArrayOf()
@@ -83,18 +84,22 @@ fun createAttachmentHistory(
     updatedBy: String = "updatedBy",
     updatedAt: Instant = parse("2023-01-01T00:00:00Z"),
     sizeInBytes: Long = 1,
+    contentType: String = IMAGE_JPEG_VALUE,
 ) = AttachmentHistory(
     updatedBy = updatedBy,
     updatedAt = updatedAt,
     sizeInBytes = sizeInBytes,
+    contentType = contentType,
 )
 
 fun createAttachmentHistoryEntity(
     updatedBy: String = "updatedBy",
     updatedAt: Instant = parse("2023-01-01T00:00:00Z"),
     sizeInBytes: Long = 1,
+    contentType: String = IMAGE_JPEG_VALUE,
 ) = AttachmentHistoryEntity(
     updatedBy = updatedBy,
     updatedAt = updatedAt,
     sizeInBytes = sizeInBytes,
+    contentType = contentType,
 )
