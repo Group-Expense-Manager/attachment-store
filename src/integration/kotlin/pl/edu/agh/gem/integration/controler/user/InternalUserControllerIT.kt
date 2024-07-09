@@ -4,7 +4,6 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import org.springframework.http.HttpStatus.CREATED
 import pl.edu.agh.gem.assertion.shouldHaveHttpStatus
 import pl.edu.agh.gem.external.dto.UserAttachmentResponse
-import pl.edu.agh.gem.helper.group.DummyGroup.GROUP_ID
 import pl.edu.agh.gem.helper.user.createGemUser
 import pl.edu.agh.gem.integration.BaseIntegrationSpec
 import pl.edu.agh.gem.integration.ability.ServiceTestClient
