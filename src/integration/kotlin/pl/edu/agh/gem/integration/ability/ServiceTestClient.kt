@@ -11,7 +11,6 @@ import pl.edu.agh.gem.paths.Paths.EXTERNAL
 import pl.edu.agh.gem.paths.Paths.INTERNAL
 import pl.edu.agh.gem.security.GemUser
 import java.net.URI
-import java.net.http.HttpHeaders
 
 @Component
 @Lazy
@@ -38,7 +37,7 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
     fun generateGroupAttachment(userId: String, groupId: String): ResponseSpec {
         return webClient.post()
             .uri(URI("$INTERNAL/groups/$groupId/users/$userId/generate"))
-                .headers { it.withAppAcceptType() }
+            .headers { it.withAppAcceptType() }
             .exchange()
     }
 
