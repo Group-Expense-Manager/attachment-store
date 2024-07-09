@@ -15,10 +15,18 @@ import pl.edu.agh.gem.exception.UserWithoutGroupAccessException
 import pl.edu.agh.gem.external.detector.AttachmentContentTypeNotSupportedException
 import pl.edu.agh.gem.external.detector.AttachmentSizeExceededException
 import pl.edu.agh.gem.internal.persistence.MissingGroupAttachmentException
+import pl.edu.agh.gem.internal.service.GroupAttachmentUpdateException
 
 @ControllerAdvice
 @Order(LOWEST_PRECEDENCE)
 class ApiExceptionHandler {
+
+    @ExceptionHandler(GroupAttachmentUpdateException::class)
+    fun handleGroupAttachmentUpdateException(
+        exception: GroupAttachmentUpdateException,
+    ): ResponseEntity<SimpleErrorsHolder> {
+        return ResponseEntity(handleError(exception), FORBIDDEN)
+    }
 
     @ExceptionHandler(UserWithoutGroupAccessException::class)
     fun handleUserWithoutGroupAccessException(

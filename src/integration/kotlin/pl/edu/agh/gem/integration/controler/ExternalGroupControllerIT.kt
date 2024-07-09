@@ -199,6 +199,7 @@ class ExternalGroupControllerIT(
         response.shouldBody<GroupAttachmentResponse> {
             this.id shouldBe newAttachment.id
         }
+        repository.getGroupAttachment(newAttachment.id, newAttachment.groupId).file.data shouldBe newAttachment.file.data
     }
 
     should("return not found when attachment not exists while trying to update attachment") {
@@ -226,15 +227,15 @@ class ExternalGroupControllerIT(
         val groupId = GROUP_ID
         val groupMembers = createGroupMembersResponse(user.id)
         val attachment = createGroupAttachment(
-                groupId = groupId,
-                file = Binary(SMALL_FILE),
-                uploadedByUser = "uploadedByUser",
+            groupId = groupId,
+            file = Binary(SMALL_FILE),
+            uploadedByUser = "uploadedByUser",
         )
         val newAttachment = createGroupAttachment(
-                id = attachment.id,
-                groupId = attachment.groupId,
-                file = Binary(LARGE_FILE),
-                uploadedByUser = user.id,
+            id = attachment.id,
+            groupId = attachment.groupId,
+            file = Binary(LARGE_FILE),
+            uploadedByUser = user.id,
         )
         repository.save(attachment)
         stubGroupManagerMembers(groupMembers, groupId, OK)
@@ -244,6 +245,7 @@ class ExternalGroupControllerIT(
 
         // then
         response shouldHaveHttpStatus PAYLOAD_TOO_LARGE
+        repository.getGroupAttachment(newAttachment.id, newAttachment.groupId).file.data shouldBe attachment.file.data
     }
 
     should("not update group attachment when media is not supported") {
@@ -252,15 +254,15 @@ class ExternalGroupControllerIT(
         val groupId = GROUP_ID
         val groupMembers = createGroupMembersResponse(user.id)
         val attachment = createGroupAttachment(
-                groupId = groupId,
-                file = Binary(SMALL_FILE),
-                uploadedByUser = "uploadedByUser",
+            groupId = groupId,
+            file = Binary(SMALL_FILE),
+            uploadedByUser = "uploadedByUser",
         )
         val newAttachment = createGroupAttachment(
-                id = attachment.id,
-                groupId = attachment.groupId,
-                file = Binary(CSV_FILE),
-                uploadedByUser = user.id,
+            id = attachment.id,
+            groupId = attachment.groupId,
+            file = Binary(CSV_FILE),
+            uploadedByUser = user.id,
         )
         repository.save(attachment)
         stubGroupManagerMembers(groupMembers, groupId, OK)
@@ -270,6 +272,7 @@ class ExternalGroupControllerIT(
 
         // then
         response shouldHaveHttpStatus UNSUPPORTED_MEDIA_TYPE
+        repository.getGroupAttachment(newAttachment.id, newAttachment.groupId).file.data shouldBe attachment.file.data
     }
 
     should("not update group attachment when user dont have access") {
@@ -278,15 +281,15 @@ class ExternalGroupControllerIT(
         val groupId = GROUP_ID
         val groupMembers = createGroupMembersResponse(OTHER_USER_ID)
         val attachment = createGroupAttachment(
-                groupId = groupId,
-                file = Binary(SMALL_FILE),
-                uploadedByUser = "uploadedByUser",
+            groupId = groupId,
+            file = Binary(SMALL_FILE),
+            uploadedByUser = "uploadedByUser",
         )
         val newAttachment = createGroupAttachment(
-                id = attachment.id,
-                groupId = attachment.groupId,
-                file = Binary(OTHER_SMALL_FILE),
-                uploadedByUser = user.id,
+            id = attachment.id,
+            groupId = attachment.groupId,
+            file = Binary(OTHER_SMALL_FILE),
+            uploadedByUser = user.id,
         )
         stubGroupManagerMembers(groupMembers, groupId, OK)
         repository.save(attachment)
@@ -296,5 +299,35 @@ class ExternalGroupControllerIT(
 
         // then
         response shouldHaveHttpStatus FORBIDDEN
+        repository.getGroupAttachment(newAttachment.id, newAttachment.groupId).file.data shouldBe attachment.file.data
+    }
+
+    should("not update group attachment with strict access when user is not creator") {
+        // given
+        val user = createGemUser()
+        val groupId = GROUP_ID
+        val groupMembers = createGroupMembersResponse(OTHER_USER_ID)
+        val attachment = createGroupAttachment(
+                groupId = groupId,
+                file = Binary(SMALL_FILE),
+                uploadedByUser = "uploadedByUser",
+                strictAccess = true,
+        )
+        val newAttachment = createGroupAttachment(
+                id = attachment.id,
+                groupId = attachment.groupId,
+                file = Binary(OTHER_SMALL_FILE),
+                uploadedByUser = user.id,
+                strictAccess = true,
+        )
+        stubGroupManagerMembers(groupMembers, groupId, OK)
+        repository.save(attachment)
+
+        // when
+        val response = service.updateGroupAttachment(newAttachment.file.data, user, newAttachment.id, newAttachment.groupId)
+
+        // then
+        response shouldHaveHttpStatus FORBIDDEN
+        repository.getGroupAttachment(newAttachment.id, newAttachment.groupId).file.data shouldBe attachment.file.data
     }
 },)

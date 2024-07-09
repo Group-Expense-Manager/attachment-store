@@ -12,6 +12,7 @@ data class GroupAttachment(
     val contentType: String,
     val sizeInBytes: Long,
     val file: Binary,
+    val strictAccess: Boolean,
     val createdAt: Instant = now(),
     val updatedAt: Instant = now(),
     val attachmentHistory: List<AttachmentHistory>,
