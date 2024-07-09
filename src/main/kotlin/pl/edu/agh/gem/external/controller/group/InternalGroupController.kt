@@ -9,15 +9,16 @@ import org.springframework.web.bind.annotation.RestController
 import pl.edu.agh.gem.external.dto.GroupAttachmentResponse
 import pl.edu.agh.gem.internal.service.GroupService
 import pl.edu.agh.gem.media.InternalApiMediaType.APPLICATION_JSON_INTERNAL_VER_1
+import pl.edu.agh.gem.paths.Paths.INTERNAL
 
 @RestController
-@RequestMapping("/internal/groups")
+@RequestMapping("$INTERNAL/groups")
 class InternalGroupController(
     val groupService: GroupService,
 ) {
     @PostMapping("/{groupId}/users/{userId}/generate", produces = [APPLICATION_JSON_INTERNAL_VER_1])
     @ResponseStatus(CREATED)
-    fun saveAttachment(
+    fun generateAttachment(
         @PathVariable groupId: String,
         @PathVariable userId: String,
     ): GroupAttachmentResponse {

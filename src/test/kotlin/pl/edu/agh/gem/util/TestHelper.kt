@@ -29,6 +29,7 @@ fun createGroupAttachment(
     contentType: String = IMAGE_JPEG_VALUE,
     sizeInBytes: Long = 1,
     file: Binary = Binary(SMALL_FILE),
+    strictAccess: Boolean = false,
     createdAt: Instant = parse("2023-01-01T00:00:00Z"),
     updatedAt: Instant? = null,
     updatedByHistory: String? = null,
@@ -41,6 +42,7 @@ fun createGroupAttachment(
     contentType = contentType,
     sizeInBytes = sizeInBytes,
     file = file,
+    strictAccess = strictAccess,
     createdAt = createdAt,
     updatedAt = updatedAt ?: createdAt,
     attachmentHistory = listOf(
@@ -59,6 +61,7 @@ fun createGroupAttachmentEntity(
     contentType: String = IMAGE_JPEG_VALUE,
     sizeInBytes: Long = 1,
     file: Binary = Binary(SMALL_FILE),
+    strictAccess: Boolean = false,
     createdAt: Instant = parse("2023-01-01T00:00:00Z"),
     updatedAt: Instant? = null,
     updatedByHistory: String? = null,
@@ -71,6 +74,7 @@ fun createGroupAttachmentEntity(
     contentType = contentType,
     sizeInBytes = sizeInBytes,
     file = file,
+    strictAccess = strictAccess,
     createdAt = createdAt,
     updatedAt = updatedAt ?: createdAt,
     attachmentHistory = listOf(
