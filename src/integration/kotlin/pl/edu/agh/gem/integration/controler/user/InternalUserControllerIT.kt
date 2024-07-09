@@ -15,7 +15,6 @@ class InternalUserControllerIT(
     should("generate user attachment") {
         // given
         val user = createGemUser()
-        val groupId = GROUP_ID
 
         // when
         val response = service.generateUserAttachment(user.id)

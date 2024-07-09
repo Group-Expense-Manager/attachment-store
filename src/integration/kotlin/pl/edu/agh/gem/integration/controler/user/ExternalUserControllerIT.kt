@@ -89,7 +89,6 @@ class ExternalUserControllerIT(
     should("get user attachment") {
         // given
         val user = createGemUser()
-        val groupMembers = createGroupMembersResponse(user.id)
         val userAttachment = createUserAttachment(
             file = Binary(LITTLE_FILE),
         )

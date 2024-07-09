@@ -2,8 +2,6 @@ package pl.edu.agh.gem.external.persistence
 
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
-import pl.edu.agh.gem.external.persistence.group.toDomain
-import pl.edu.agh.gem.external.persistence.group.toEntity
 import pl.edu.agh.gem.external.persistence.user.toDomain
 import pl.edu.agh.gem.external.persistence.user.toEntity
 import pl.edu.agh.gem.util.createUserAttachment
@@ -11,7 +9,7 @@ import pl.edu.agh.gem.util.createUserAttachmentEntity
 
 class UserAttachmentEntityTest : ShouldSpec({
 
-    should("map correct UserAttachmentEntity to UserAttachment") {
+    should("map correct UserAttachment to UserAttachmentEntity") {
         // given
         val groupAttachment = createUserAttachment()
 
@@ -31,7 +29,7 @@ class UserAttachmentEntityTest : ShouldSpec({
         }
     }
 
-    should("map correct UserAttachment to UserAttachmentEntity") {
+    should("map correct UserAttachmentEntity to UserAttachment") {
         // given
         val groupAttachmentEntity = createUserAttachmentEntity()
 
