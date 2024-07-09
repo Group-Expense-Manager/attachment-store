@@ -51,7 +51,7 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
 
     fun createUserAttachment(body: Any?, user: GemUser): ResponseSpec {
         return webClient.post()
-            .uri(URI("/external/users/"))
+            .uri(URI("$EXTERNAL/users/"))
             .headers { it.withValidatedUser(user) }
             .bodyValue(body)
             .exchange()
@@ -59,19 +59,19 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
 
     fun getUserAttachment(userId: String, attachmentId: String): ResponseSpec {
         return webClient.get()
-            .uri(URI("/external/users/$userId/attachments/$attachmentId"))
+            .uri(URI("$EXTERNAL/users/$userId/attachments/$attachmentId"))
             .exchange()
     }
 
     fun generateUserAttachment(userId: String): ResponseSpec {
         return webClient.post()
-            .uri(URI("/internal/users/$userId/generate"))
+            .uri(URI("$INTERNAL/users/$userId/generate"))
             .exchange()
     }
 
     fun updateUserAttachment(body: Any?, user: GemUser, attachmentId: String): ResponseSpec {
         return webClient.put()
-            .uri(URI("/external/users/attachments/$attachmentId"))
+            .uri(URI("$EXTERNAL/users/attachments/$attachmentId"))
             .headers { it.withValidatedUser(user) }
             .bodyValue(body)
             .exchange()

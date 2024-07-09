@@ -28,7 +28,7 @@ class AttachmentMapperIT(
         response.headers.getFirst(UPDATED_AT_HEADER) shouldBe attachment.updatedAt.toString()
     }
 
-    should("map UserAttachmentt to ResponseEntity") {
+    should("map UserAttachment to ResponseEntity") {
         // given
         val attachment = createUserAttachment()
 

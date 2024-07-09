@@ -49,7 +49,7 @@ class UserService(
     }
 
     fun generateUserImage(userId: String): UserAttachment {
-        val generateImage = fileLoader.loadRandomGroupImage()
+        val generateImage = fileLoader.loadRandomUserImage()
         return saveAttachment(generateImage, userId)
     }
 }

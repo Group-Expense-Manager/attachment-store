@@ -8,5 +8,5 @@ interface UserAttachmentRepository {
 }
 
 class MissingUserAttachmentException(attachmentId: String, userId: String) : RuntimeException(
-    "Attachment with id:$attachmentId for userId:$userId not found",
+    "Attachment with id: $attachmentId for userId: $userId not found",
 )
