@@ -21,7 +21,7 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
 
     fun createGroupAttachment(body: Any?, user: GemUser, groupId: String): ResponseSpec {
         return webClient.post()
-            .uri(URI("$EXTERNAL /groups/$groupId"))
+            .uri(URI("$EXTERNAL/groups/$groupId"))
             .headers { it.withValidatedUser(user) }
             .bodyValue(body)
             .exchange()
