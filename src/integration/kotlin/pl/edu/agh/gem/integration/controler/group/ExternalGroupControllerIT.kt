@@ -308,17 +308,17 @@ class ExternalGroupControllerIT(
         val groupId = GROUP_ID
         val groupMembers = createGroupMembersResponse(OTHER_USER_ID)
         val attachment = createGroupAttachment(
-                groupId = groupId,
-                file = Binary(SMALL_FILE),
-                uploadedByUser = "uploadedByUser",
-                strictAccess = true,
+            groupId = groupId,
+            file = Binary(SMALL_FILE),
+            uploadedByUser = "uploadedByUser",
+            strictAccess = true,
         )
         val newAttachment = createGroupAttachment(
-                id = attachment.id,
-                groupId = attachment.groupId,
-                file = Binary(OTHER_SMALL_FILE),
-                uploadedByUser = user.id,
-                strictAccess = true,
+            id = attachment.id,
+            groupId = attachment.groupId,
+            file = Binary(OTHER_SMALL_FILE),
+            uploadedByUser = user.id,
+            strictAccess = true,
         )
         stubGroupManagerMembers(groupMembers, groupId, OK)
         repository.save(attachment)

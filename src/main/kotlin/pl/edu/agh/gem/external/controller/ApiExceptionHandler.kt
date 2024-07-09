@@ -15,8 +15,8 @@ import pl.edu.agh.gem.exception.UserWithoutGroupAccessException
 import pl.edu.agh.gem.external.detector.AttachmentContentTypeNotSupportedException
 import pl.edu.agh.gem.external.detector.AttachmentSizeExceededException
 import pl.edu.agh.gem.internal.persistence.MissingGroupAttachmentException
-import pl.edu.agh.gem.internal.service.GroupAttachmentUpdateException
 import pl.edu.agh.gem.internal.persistence.MissingUserAttachmentException
+import pl.edu.agh.gem.internal.service.GroupAttachmentUpdateException
 
 @ControllerAdvice
 @Order(LOWEST_PRECEDENCE)

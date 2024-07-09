@@ -107,7 +107,7 @@ class UserServiceTest : ShouldSpec({
 
         whenever(fileDetector.getFileSize(data)).thenReturn(attachment.sizeInBytes)
         whenever(fileDetector.getFileMediaType(data)).thenReturn(attachment.contentType)
-        whenever(fileLoader.loadRandomGroupImage()).thenReturn(attachment.file.data)
+        whenever(fileLoader.loadRandomUserImage()).thenReturn(attachment.file.data)
         whenever(userAttachmentRepository.save(any())).thenReturn(attachment)
 
         // when
