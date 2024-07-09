@@ -21,7 +21,7 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
 
     fun createGroupAttachment(body: Any?, user: GemUser, groupId: String): ResponseSpec {
         return webClient.post()
-            .uri(URI("$EXTERNAL /groups/$groupId"))
+            .uri(URI("$EXTERNAL/groups/$groupId"))
             .headers { it.withValidatedUser(user) }
             .bodyValue(body)
             .exchange()
@@ -43,7 +43,7 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
 
     fun updateGroupAttachment(body: Any?, user: GemUser, attachmentId: String, groupId: String): ResponseSpec {
         return webClient.put()
-            .uri(URI("/external/groups/$groupId/attachments/$attachmentId"))
+            .uri(URI("$EXTERNAL/groups/$groupId/attachments/$attachmentId"))
             .headers { it.withValidatedUser(user) }
             .bodyValue(body)
             .exchange()

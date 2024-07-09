@@ -23,6 +23,7 @@ class GroupService(
             uploadedByUser = userId,
             contentType = contentType,
             sizeInBytes = size,
+            strictAccess = strictAccess,
             file = Binary(data),
             attachmentHistory = listOf(createNewAttachmentHistory(userId, size, contentType)),
         )
@@ -31,6 +32,8 @@ class GroupService(
 
     fun updateAttachment(data: ByteArray, attachmentId: String, groupId: String, userId: String): GroupAttachment {
         val attachment = getAttachment(groupId, attachmentId)
+        attachment.checkUserPerformUpdate(userId)
+
         val size = fileDetector.getFileSize(data)
         val contentType = fileDetector.getFileMediaType(data)
 
@@ -52,6 +55,14 @@ class GroupService(
 
     fun generateGroupImage(groupId: String, userId: String): GroupAttachment {
         val generateImage = fileLoader.loadRandomGroupImage()
-        return saveAttachment(generateImage, groupId, userId)
+        return saveAttachment(generateImage, groupId, userId, false)
+    }
+
+    private fun GroupAttachment.checkUserPerformUpdate(userId: String) {
+        if (uploadedByUser != userId && strictAccess) {
+            throw GroupAttachmentUpdateException(userId)
+        }
     }
 }
+
+class GroupAttachmentUpdateException(userId: String) : RuntimeException("User $userId is not allowed to update attachment")
