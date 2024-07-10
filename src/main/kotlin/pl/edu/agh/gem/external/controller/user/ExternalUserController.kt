@@ -15,10 +15,11 @@ import pl.edu.agh.gem.external.dto.UserAttachmentResponse
 import pl.edu.agh.gem.external.mapper.AttachmentMapper
 import pl.edu.agh.gem.internal.service.UserService
 import pl.edu.agh.gem.media.InternalApiMediaType.APPLICATION_JSON_INTERNAL_VER_1
+import pl.edu.agh.gem.paths.Paths.EXTERNAL
 import pl.edu.agh.gem.security.GemUserId
 
 @RestController
-@RequestMapping("/external/users/")
+@RequestMapping("$EXTERNAL/users/")
 class ExternalUserController(
     val userService: UserService,
     val attachmentMapper: AttachmentMapper,
