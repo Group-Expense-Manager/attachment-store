@@ -15,7 +15,7 @@ class GroupService(
     private val fileDetector: FileDetector,
     private val fileLoader: FileLoader,
 ) {
-    fun saveAttachment(data: ByteArray, groupId: String, userId: String): GroupAttachment {
+    fun saveAttachment(data: ByteArray, groupId: String, userId: String, strictAccess: Boolean): GroupAttachment {
         val size = fileDetector.getFileSize(data)
         val contentType = fileDetector.getFileMediaType(data)
         val groupAttachment = GroupAttachment(
