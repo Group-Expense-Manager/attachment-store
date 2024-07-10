@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RestController
 import pl.edu.agh.gem.external.dto.UserAttachmentResponse
 import pl.edu.agh.gem.internal.service.UserService
 import pl.edu.agh.gem.media.InternalApiMediaType.APPLICATION_JSON_INTERNAL_VER_1
+import pl.edu.agh.gem.paths.Paths.INTERNAL
 
 @RestController
-@RequestMapping("/internal/users")
+@RequestMapping("$INTERNAL/users")
 class InternalUserController(
     val userService: UserService,
 ) {
