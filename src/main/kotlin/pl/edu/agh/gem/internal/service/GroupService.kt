@@ -4,6 +4,7 @@ import org.bson.types.Binary
 import org.springframework.stereotype.Service
 import pl.edu.agh.gem.internal.client.GroupManagerClient
 import pl.edu.agh.gem.internal.detector.FileDetector
+import pl.edu.agh.gem.internal.loader.FileLoader
 import pl.edu.agh.gem.internal.model.GroupAttachment
 import pl.edu.agh.gem.internal.model.createNewAttachmentHistory
 import pl.edu.agh.gem.internal.persistence.GroupAttachmentRepository
@@ -14,6 +15,7 @@ class GroupService(
     private val groupManagerClient: GroupManagerClient,
     private val groupAttachmentRepository: GroupAttachmentRepository,
     private val fileDetector: FileDetector,
+    private val fileLoader: FileLoader,
 ) {
     fun getGroupMembers(groupId: String): GroupMembers {
         return groupManagerClient.getGroupMembers(groupId)
@@ -34,5 +36,10 @@ class GroupService(
 
     fun getAttachment(groupId: String, attachmentId: String): GroupAttachment {
         return groupAttachmentRepository.getGroupAttachment(attachmentId, groupId)
+    }
+
+    fun generateGroupImage(groupId: String, userId: String): GroupAttachment {
+        val generateImage = fileLoader.loadRandomGroupImage()
+        return saveAttachment(generateImage, groupId, userId)
     }
 }

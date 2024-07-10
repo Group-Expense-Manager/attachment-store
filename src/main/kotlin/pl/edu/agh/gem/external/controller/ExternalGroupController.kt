@@ -16,11 +16,12 @@ import pl.edu.agh.gem.external.dto.GroupAttachmentResponse
 import pl.edu.agh.gem.external.mapper.AttachmentMapper
 import pl.edu.agh.gem.internal.service.GroupService
 import pl.edu.agh.gem.media.InternalApiMediaType.APPLICATION_JSON_INTERNAL_VER_1
+import pl.edu.agh.gem.paths.Paths.EXTERNAL
 import pl.edu.agh.gem.security.GemUserId
 
 @RestController
-@RequestMapping("/external/groups")
-class GroupController(
+@RequestMapping("$EXTERNAL/groups")
+class ExternalGroupController(
     val groupService: GroupService,
     val attachmentMapper: AttachmentMapper,
 ) {

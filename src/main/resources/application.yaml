@@ -33,6 +33,19 @@ attachment:
     - image/png
     - image/bmp
 
+default:
+  group:
+    - "group-default-0.jpeg"
+    - "group-default-1.jpeg"
+    - "group-default-2.jpeg"
+    - "group-default-3.jpeg"
+    - "group-default-4.jpeg"
+    - "group-default-5.jpeg"
+    - "group-default-6.jpeg"
+    - "group-default-7.jpeg"
+    - "group-default-8.jpeg"
+    - "group-default-9.jpeg"
+
 group-manager:
   url: "group/manager/some/url"
   read-timeout: 1000ms

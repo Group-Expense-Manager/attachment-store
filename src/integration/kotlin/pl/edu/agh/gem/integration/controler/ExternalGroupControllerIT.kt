@@ -31,7 +31,7 @@ import pl.edu.agh.gem.util.TestHelper.LITTLE_FILE
 import pl.edu.agh.gem.util.TestHelper.SMALL_FILE
 import pl.edu.agh.gem.util.createGroupAttachment
 
-class GroupControllerIT(
+class ExternalGroupControllerIT(
     private val service: ServiceTestClient,
     private val repository: GroupAttachmentRepository,
 ) : BaseIntegrationSpec({
