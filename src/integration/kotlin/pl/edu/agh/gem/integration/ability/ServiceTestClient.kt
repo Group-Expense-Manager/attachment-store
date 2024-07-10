@@ -40,4 +40,12 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
             .headers { it.withAppAcceptType() }
             .exchange()
     }
+
+    fun updateGroupAttachment(body: Any?, user: GemUser, attachmentId: String, groupId: String): ResponseSpec {
+        return webClient.put()
+            .uri(URI("$EXTERNAL/groups/$groupId/attachments/$attachmentId"))
+            .headers { it.withValidatedUser(user) }
+            .bodyValue(body)
+            .exchange()
+    }
 }

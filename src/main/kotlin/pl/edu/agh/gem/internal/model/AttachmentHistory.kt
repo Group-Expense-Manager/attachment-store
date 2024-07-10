@@ -7,10 +7,16 @@ data class AttachmentHistory(
     val updatedBy: String,
     val updatedAt: Instant,
     val sizeInBytes: Long,
+    val contentType: String,
 )
 
-fun createNewAttachmentHistory(updatedBy: String, sizeInBytes: Long) = AttachmentHistory(
+fun createNewAttachmentHistory(
+    updatedBy: String,
+    sizeInBytes: Long,
+    mediaType: String,
+) = AttachmentHistory(
     updatedBy = updatedBy,
     updatedAt = now(),
     sizeInBytes = sizeInBytes,
+    contentType = mediaType,
 )

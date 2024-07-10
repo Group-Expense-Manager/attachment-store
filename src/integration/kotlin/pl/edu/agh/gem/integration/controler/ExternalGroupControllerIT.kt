@@ -1,6 +1,7 @@
 package pl.edu.agh.gem.integration.controler
 
 import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.bson.types.Binary
 import org.springframework.http.HttpHeaders.CONTENT_LENGTH
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.HttpStatus.PAYLOAD_TOO_LARGE
 import org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE
+import pl.edu.agh.gem.assertion.shouldBody
 import pl.edu.agh.gem.assertion.shouldHaveBody
 import pl.edu.agh.gem.assertion.shouldHaveHttpStatus
 import pl.edu.agh.gem.external.dto.GroupAttachmentResponse
@@ -28,6 +30,7 @@ import pl.edu.agh.gem.util.TestHelper.CSV_FILE
 import pl.edu.agh.gem.util.TestHelper.EMPTY_FILE
 import pl.edu.agh.gem.util.TestHelper.LARGE_FILE
 import pl.edu.agh.gem.util.TestHelper.LITTLE_FILE
+import pl.edu.agh.gem.util.TestHelper.OTHER_SMALL_FILE
 import pl.edu.agh.gem.util.TestHelper.SMALL_FILE
 import pl.edu.agh.gem.util.createGroupAttachment
 
@@ -167,5 +170,164 @@ class ExternalGroupControllerIT(
 
         // then
         response shouldHaveHttpStatus NOT_FOUND
+    }
+
+    should("update group attachment") {
+        // given
+        val user = createGemUser()
+        val groupId = GROUP_ID
+        val groupMembers = createGroupMembersResponse(user.id)
+        val attachment = createGroupAttachment(
+            groupId = groupId,
+            file = Binary(SMALL_FILE),
+            uploadedByUser = "uploadedByUser",
+        )
+        val newAttachment = createGroupAttachment(
+            id = attachment.id,
+            groupId = attachment.groupId,
+            file = Binary(OTHER_SMALL_FILE),
+            uploadedByUser = user.id,
+        )
+        repository.save(attachment)
+        stubGroupManagerMembers(groupMembers, groupId, OK)
+
+        // when
+        val response = service.updateGroupAttachment(newAttachment.file.data, user, newAttachment.id, newAttachment.groupId)
+
+        // then
+        response shouldHaveHttpStatus OK
+        response.shouldBody<GroupAttachmentResponse> {
+            this.id shouldBe newAttachment.id
+        }
+        repository.getGroupAttachment(newAttachment.id, newAttachment.groupId).file.data shouldBe newAttachment.file.data
+    }
+
+    should("return not found when attachment not exists while trying to update attachment") {
+        // given
+        val user = createGemUser()
+        val groupId = GROUP_ID
+        val groupMembers = createGroupMembersResponse(user.id)
+        val newAttachment = createGroupAttachment(
+            groupId = groupId,
+            file = Binary(OTHER_SMALL_FILE),
+            uploadedByUser = "otherUser",
+        )
+        stubGroupManagerMembers(groupMembers, groupId, OK)
+
+        // when
+        val response = service.updateGroupAttachment(newAttachment.file.data, user, newAttachment.id, groupId)
+
+        // then
+        response shouldHaveHttpStatus NOT_FOUND
+    }
+
+    should("not update group attachment when file is too large") {
+        // given
+        val user = createGemUser()
+        val groupId = GROUP_ID
+        val groupMembers = createGroupMembersResponse(user.id)
+        val attachment = createGroupAttachment(
+            groupId = groupId,
+            file = Binary(SMALL_FILE),
+            uploadedByUser = "uploadedByUser",
+        )
+        val newAttachment = createGroupAttachment(
+            id = attachment.id,
+            groupId = attachment.groupId,
+            file = Binary(LARGE_FILE),
+            uploadedByUser = user.id,
+        )
+        repository.save(attachment)
+        stubGroupManagerMembers(groupMembers, groupId, OK)
+
+        // when
+        val response = service.updateGroupAttachment(newAttachment.file.data, user, newAttachment.id, newAttachment.groupId)
+
+        // then
+        response shouldHaveHttpStatus PAYLOAD_TOO_LARGE
+        repository.getGroupAttachment(newAttachment.id, newAttachment.groupId).file.data shouldBe attachment.file.data
+    }
+
+    should("not update group attachment when media is not supported") {
+        // given
+        val user = createGemUser()
+        val groupId = GROUP_ID
+        val groupMembers = createGroupMembersResponse(user.id)
+        val attachment = createGroupAttachment(
+            groupId = groupId,
+            file = Binary(SMALL_FILE),
+            uploadedByUser = "uploadedByUser",
+        )
+        val newAttachment = createGroupAttachment(
+            id = attachment.id,
+            groupId = attachment.groupId,
+            file = Binary(CSV_FILE),
+            uploadedByUser = user.id,
+        )
+        repository.save(attachment)
+        stubGroupManagerMembers(groupMembers, groupId, OK)
+
+        // when
+        val response = service.updateGroupAttachment(newAttachment.file.data, user, newAttachment.id, newAttachment.groupId)
+
+        // then
+        response shouldHaveHttpStatus UNSUPPORTED_MEDIA_TYPE
+        repository.getGroupAttachment(newAttachment.id, newAttachment.groupId).file.data shouldBe attachment.file.data
+    }
+
+    should("not update group attachment when user dont have access") {
+        // given
+        val user = createGemUser()
+        val groupId = GROUP_ID
+        val groupMembers = createGroupMembersResponse(OTHER_USER_ID)
+        val attachment = createGroupAttachment(
+            groupId = groupId,
+            file = Binary(SMALL_FILE),
+            uploadedByUser = "uploadedByUser",
+        )
+        val newAttachment = createGroupAttachment(
+            id = attachment.id,
+            groupId = attachment.groupId,
+            file = Binary(OTHER_SMALL_FILE),
+            uploadedByUser = user.id,
+        )
+        stubGroupManagerMembers(groupMembers, groupId, OK)
+        repository.save(attachment)
+
+        // when
+        val response = service.updateGroupAttachment(newAttachment.file.data, user, newAttachment.id, newAttachment.groupId)
+
+        // then
+        response shouldHaveHttpStatus FORBIDDEN
+        repository.getGroupAttachment(newAttachment.id, newAttachment.groupId).file.data shouldBe attachment.file.data
+    }
+
+    should("not update group attachment with strict access when user is not creator") {
+        // given
+        val user = createGemUser()
+        val groupId = GROUP_ID
+        val groupMembers = createGroupMembersResponse(OTHER_USER_ID)
+        val attachment = createGroupAttachment(
+                groupId = groupId,
+                file = Binary(SMALL_FILE),
+                uploadedByUser = "uploadedByUser",
+                strictAccess = true,
+        )
+        val newAttachment = createGroupAttachment(
+                id = attachment.id,
+                groupId = attachment.groupId,
+                file = Binary(OTHER_SMALL_FILE),
+                uploadedByUser = user.id,
+                strictAccess = true,
+        )
+        stubGroupManagerMembers(groupMembers, groupId, OK)
+        repository.save(attachment)
+
+        // when
+        val response = service.updateGroupAttachment(newAttachment.file.data, user, newAttachment.id, newAttachment.groupId)
+
+        // then
+        response shouldHaveHttpStatus FORBIDDEN
+        repository.getGroupAttachment(newAttachment.id, newAttachment.groupId).file.data shouldBe attachment.file.data
     }
 },)
