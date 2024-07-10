@@ -2,25 +2,19 @@ package pl.edu.agh.gem.internal.service
 
 import org.bson.types.Binary
 import org.springframework.stereotype.Service
-import pl.edu.agh.gem.internal.client.GroupManagerClient
 import pl.edu.agh.gem.internal.detector.FileDetector
 import pl.edu.agh.gem.internal.loader.FileLoader
 import pl.edu.agh.gem.internal.model.GroupAttachment
 import pl.edu.agh.gem.internal.model.createNewAttachmentHistory
 import pl.edu.agh.gem.internal.persistence.GroupAttachmentRepository
-import pl.edu.agh.gem.model.GroupMembers
 import java.time.Instant.now
 
 @Service
 class GroupService(
-    private val groupManagerClient: GroupManagerClient,
     private val groupAttachmentRepository: GroupAttachmentRepository,
     private val fileDetector: FileDetector,
     private val fileLoader: FileLoader,
 ) {
-    fun getGroupMembers(groupId: String): GroupMembers {
-        return groupManagerClient.getGroupMembers(groupId)
-    }
     fun saveAttachment(data: ByteArray, groupId: String, userId: String, strictAccess: Boolean): GroupAttachment {
         val size = fileDetector.getFileSize(data)
         val contentType = fileDetector.getFileMediaType(data)

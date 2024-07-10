@@ -15,6 +15,7 @@ import pl.edu.agh.gem.exception.UserWithoutGroupAccessException
 import pl.edu.agh.gem.external.detector.AttachmentContentTypeNotSupportedException
 import pl.edu.agh.gem.external.detector.AttachmentSizeExceededException
 import pl.edu.agh.gem.internal.persistence.MissingGroupAttachmentException
+import pl.edu.agh.gem.internal.persistence.MissingUserAttachmentException
 import pl.edu.agh.gem.internal.service.GroupAttachmentUpdateException
 
 @ControllerAdvice
@@ -52,6 +53,13 @@ class ApiExceptionHandler {
     @ExceptionHandler(MissingGroupAttachmentException::class)
     fun handleMissingGroupAttachmentException(
         exception: MissingGroupAttachmentException,
+    ): ResponseEntity<SimpleErrorsHolder> {
+        return ResponseEntity(handleError(exception), NOT_FOUND)
+    }
+
+    @ExceptionHandler(MissingUserAttachmentException::class)
+    fun handleMissingUserAttachmentException(
+        exception: MissingUserAttachmentException,
     ): ResponseEntity<SimpleErrorsHolder> {
         return ResponseEntity(handleError(exception), NOT_FOUND)
     }

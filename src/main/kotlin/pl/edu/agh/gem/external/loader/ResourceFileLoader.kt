@@ -16,6 +16,12 @@ class ResourceFileLoader(
         }
     }
 
+    override fun loadRandomUserImage(): ByteArray {
+        return defaultImagesProperties.user.random().let {
+            loadFile("images/user/$it")
+        }
+    }
+
     private fun loadFile(path: String): ByteArray {
         return try {
             ClassPathResource(path).contentAsByteArray

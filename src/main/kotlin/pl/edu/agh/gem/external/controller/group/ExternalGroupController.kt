@@ -1,4 +1,4 @@
-package pl.edu.agh.gem.external.controller
+package pl.edu.agh.gem.external.controller.group
 
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus.CREATED
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 import pl.edu.agh.gem.exception.UserWithoutGroupAccessException
 import pl.edu.agh.gem.external.dto.GroupAttachmentResponse
 import pl.edu.agh.gem.external.mapper.AttachmentMapper
+import pl.edu.agh.gem.internal.client.GroupManagerClient
 import pl.edu.agh.gem.internal.service.GroupService
 import pl.edu.agh.gem.media.InternalApiMediaType.APPLICATION_JSON_INTERNAL_VER_1
 import pl.edu.agh.gem.paths.Paths.EXTERNAL
@@ -25,6 +26,7 @@ import pl.edu.agh.gem.security.GemUserId
 class ExternalGroupController(
     val groupService: GroupService,
     val attachmentMapper: AttachmentMapper,
+    val groupManagerClient: GroupManagerClient,
 ) {
 
     @PostMapping("/{groupId}", produces = [APPLICATION_JSON_INTERNAL_VER_1])
@@ -66,6 +68,6 @@ class ExternalGroupController(
     }
 
     private fun String.checkIfUserHaveAccess(groupId: String) {
-        groupService.getGroupMembers(groupId).members.find { it.id == this } ?: throw UserWithoutGroupAccessException(this)
+        groupManagerClient.getGroupMembers(groupId).members.find { it.id == this } ?: throw UserWithoutGroupAccessException(this)
     }
 }
