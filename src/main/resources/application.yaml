@@ -47,6 +47,8 @@ default:
     - "group-default-9.jpeg"
   user:
     - "user-default-0.jpeg"
+  blank:
+    - "blank-default-0.jpeg"
 
 group-manager:
   url: "group/manager/some/url"

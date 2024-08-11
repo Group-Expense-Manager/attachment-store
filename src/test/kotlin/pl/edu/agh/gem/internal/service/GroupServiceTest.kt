@@ -245,4 +245,31 @@ class GroupServiceTest : ShouldSpec({
             groupService.updateAttachment(data, newAttachment.id, newAttachment.groupId, newAttachment.uploadedByUser)
         }
     }
+
+    should("generate group blank image") {
+        // given
+        val attachment = createGroupAttachment()
+        val data = attachment.file.data
+
+        whenever(fileDetector.getFileSize(data)).thenReturn(attachment.sizeInBytes)
+        whenever(fileDetector.getFileMediaType(data)).thenReturn(attachment.contentType)
+        whenever(fileLoader.loadRandomBlankImage()).thenReturn(attachment.file.data)
+        whenever(groupAttachmentRepository.save(any())).thenReturn(attachment)
+
+        // when
+        val groupAttachment = groupService.generateBlankImage(attachment.groupId, attachment.uploadedByUser)
+
+        // then
+        verify(groupAttachmentRepository, times(1)).save(any())
+        groupAttachment.id.shouldNotBeNull()
+        groupAttachment.groupId shouldBe attachment.groupId
+        groupAttachment.uploadedByUser shouldBe attachment.uploadedByUser
+        groupAttachment.contentType shouldBe attachment.contentType
+        groupAttachment.sizeInBytes shouldBe attachment.sizeInBytes
+        groupAttachment.file shouldBe attachment.file
+        groupAttachment.strictAccess shouldBe false
+        groupAttachment.createdAt shouldBe attachment.createdAt
+        groupAttachment.updatedAt shouldBe attachment.updatedAt
+        groupAttachment.attachmentHistory shouldBe attachment.attachmentHistory
+    }
 },)

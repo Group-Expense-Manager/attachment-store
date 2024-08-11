@@ -10,4 +10,5 @@ class GroupDefaultConfig
 data class DefaultImagesProperties(
     val group: Set<String>,
     val user: Set<String>,
+    val blank: Set<String>,
 )
