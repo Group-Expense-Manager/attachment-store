@@ -76,4 +76,11 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
             .bodyValue(body)
             .exchange()
     }
+
+    fun generateGroupBlankAttachment(userId: String, groupId: String): ResponseSpec {
+        return webClient.post()
+            .uri(URI("$INTERNAL/groups/$groupId/users/$userId/generate/blank"))
+            .headers { it.withAppAcceptType() }
+            .exchange()
+    }
 }

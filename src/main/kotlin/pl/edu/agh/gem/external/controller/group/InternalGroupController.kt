@@ -24,4 +24,13 @@ class InternalGroupController(
     ): GroupAttachmentResponse {
         return GroupAttachmentResponse.from(groupService.generateGroupImage(groupId, userId))
     }
+
+    @PostMapping("/{groupId}/users/{userId}/generate/blank", produces = [APPLICATION_JSON_INTERNAL_VER_1])
+    @ResponseStatus(CREATED)
+    fun generateBlankAttachment(
+        @PathVariable groupId: String,
+        @PathVariable userId: String,
+    ): GroupAttachmentResponse {
+        return GroupAttachmentResponse.from(groupService.generateBlankImage(groupId, userId))
+    }
 }

@@ -58,6 +58,11 @@ class GroupService(
         return saveAttachment(generateImage, groupId, userId, false)
     }
 
+    fun generateBlankImage(groupId: String, userId: String): GroupAttachment {
+        val generateImage = fileLoader.loadRandomBlankImage()
+        return saveAttachment(generateImage, groupId, userId, true)
+    }
+
     private fun GroupAttachment.checkUserPerformUpdate(userId: String) {
         if (uploadedByUser != userId && strictAccess) {
             throw GroupAttachmentUpdateException(userId)

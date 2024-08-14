@@ -26,4 +26,19 @@ class InternalGroupControllerIT(
             it.id.shouldNotBeNull()
         }
     }
+
+    should("generate group blank attachment") {
+        // given
+        val user = createGemUser()
+        val groupId = GROUP_ID
+
+        // when
+        val response = service.generateGroupBlankAttachment(user.id, groupId)
+
+        // then
+        response shouldHaveHttpStatus CREATED
+        response.expectBody(GroupAttachmentResponse::class.java).returnResult().responseBody?.also {
+            it.id.shouldNotBeNull()
+        }
+    }
 },)

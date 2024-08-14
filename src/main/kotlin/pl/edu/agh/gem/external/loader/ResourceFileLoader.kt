@@ -22,6 +22,12 @@ class ResourceFileLoader(
         }
     }
 
+    override fun loadRandomBlankImage(): ByteArray {
+        return defaultImagesProperties.blank.random().let {
+            loadFile("images/blank/$it")
+        }
+    }
+
     private fun loadFile(path: String): ByteArray {
         return try {
             ClassPathResource(path).contentAsByteArray
