@@ -49,6 +49,14 @@ default:
     - "group-default-9.jpeg"
   user:
     - "user-default-0.jpeg"
+    - "user-default-1.jpeg"
+    - "user-default-2.jpeg"
+    - "user-default-3.jpeg"
+    - "user-default-4.jpeg"
+    - "user-default-5.jpeg"
+    - "user-default-6.jpeg"
+    - "user-default-7.jpeg"
+    - "user-default-8.jpeg"
   blank:
     - "blank-default-0.jpeg"
 
