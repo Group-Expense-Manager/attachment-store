@@ -45,11 +45,11 @@ class InternalGroupController(
         @RequestParam userId: String,
     ): GroupAttachmentResponse {
         val attachment = groupService.saveAttachment(
-                data = fileBytes,
-                groupId = groupId,
-                userId = userId,
-                strictAccess = strictAccess,
-                restriction = false
+            data = fileBytes,
+            groupId = groupId,
+            userId = userId,
+            strictAccess = strictAccess,
+            restriction = false,
         )
         return GroupAttachmentResponse.from(attachment)
     }
