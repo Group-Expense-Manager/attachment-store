@@ -15,19 +15,19 @@ class TikaFileDetector(
 
     private val tika = Tika()
 
-    override fun getFileMediaType(content: ByteArray): String {
+    override fun getFileMediaType(content: ByteArray, restrictionCheck: Boolean): String {
         val contentType = tika.detect(content.inputStream())
         logger.info { "Detected content type: $contentType" }
-        if (!attachmentProperties.allowedType.contains(contentType)) {
+        if (restrictionCheck && !attachmentProperties.allowedType.contains(contentType)) {
             throw AttachmentContentTypeNotSupportedException(contentType)
         }
         return contentType
     }
 
-    override fun getFileSize(content: ByteArray): Long {
+    override fun getFileSize(content: ByteArray, restrictionCheck: Boolean): Long {
         val size = content.size.toLong()
         logger.info { "Detected file size: $size" }
-        if (size > maxAttachmentSize.maxSizeInBytes) {
+        if (restrictionCheck && size > maxAttachmentSize.maxSizeInBytes) {
             throw AttachmentSizeExceededException(size)
         }
         return size

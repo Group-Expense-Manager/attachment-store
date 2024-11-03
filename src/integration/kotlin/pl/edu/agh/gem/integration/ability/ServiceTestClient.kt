@@ -83,4 +83,11 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
             .headers { it.withAppAcceptType() }
             .exchange()
     }
+
+    fun createInternalGroupAttachment(body: Any?, userId: String, groupId: String): ResponseSpec {
+        return webClient.post()
+            .uri(URI("$INTERNAL/groups/$groupId?userId=$userId"))
+            .bodyValue(body)
+            .exchange()
+    }
 }
