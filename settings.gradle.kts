@@ -63,7 +63,7 @@ dependencyResolutionManagement {
         }
         create("testlibs") {
             version("kotest", "5.8.1")
-            version("testcontainers", "1.19.7")
+            version("testcontainers", "1.20.3")
             library("kotest-runner-junit5", "io.kotest", "kotest-runner-junit5").versionRef("kotest")
             library("kotest-assertions-core", "io.kotest", "kotest-assertions-core").versionRef("kotest")
             library("kotest-assertions-json", "io.kotest", "kotest-assertions-json").versionRef("kotest")
