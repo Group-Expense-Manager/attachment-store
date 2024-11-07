@@ -5,7 +5,16 @@
 
 version: 2
 updates:
-  - package-ecosystem: "" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "gradle" # Specify Gradle as the package ecosystem
+    directory: "/" # Location of the `build.gradle` or `build.gradle.kts` file
     schedule:
-      interval: "weekly"
+      interval: "weekly" # Check for updates on a weekly basis
+    commit-message:
+      prefix: "deps" # Optional: customize commit message prefix
+    pull-request-branch-name:
+      prefix: "dependabot-gradle" # Optional: customize branch name prefix
+    group:
+      name: "all-dependencies" # Group name for dependencies
+      # Combine all dependency updates into a single PR
+      patterns:
+        - "*"
