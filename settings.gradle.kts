@@ -29,7 +29,7 @@ dependencyResolutionManagement {
 
         create("libs") {
             version("spring-boot", "3.2.3")
-            version("tika", "2.9.2")
+            version("tika", "3.0.0")
             version("dependency-management", "1.1.4")
 
             library("guava", "com.google.guava:guava:33.1.0-jre")
@@ -38,6 +38,7 @@ dependencyResolutionManagement {
 
             library("tika-parsers", "org.apache.tika", "tika-parsers").versionRef("tika")
             library("tika-core", "org.apache.tika", "tika-core").versionRef("tika")
+            library("tika-parser-microsoft", "org.apache.tika", "tika-parser-microsoft-module").versionRef("tika")
 
             version("resilience4j", "2.2.0")
             library("resilience4j-kotlin", "io.github.resilience4j", "resilience4j-kotlin").versionRef("resilience4j")
@@ -58,6 +59,7 @@ dependencyResolutionManagement {
                 listOf(
                     "tika-core",
                     "tika-parsers",
+                    "tika-parser-microsoft",
                 ),
             )
         }

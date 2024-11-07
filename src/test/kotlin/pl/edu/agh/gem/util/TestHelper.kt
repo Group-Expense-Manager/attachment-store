@@ -19,7 +19,11 @@ object TestHelper {
     val OTHER_SMALL_FILE = loadResourceAsByteArray("other-small-image.jpg")
     val LARGE_FILE = loadResourceAsByteArray("large-image.jpg")
     val CSV_FILE = loadResourceAsByteArray("example.csv")
+    val PDF_FILE = loadResourceAsByteArray("example.pdf")
+    val XLSX_FILE = loadResourceAsByteArray("example.xlsx")
     val EMPTY_FILE = byteArrayOf()
+
+    const val XLSX_CONTENT_TYPE_VALUE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 }
 
 fun createGroupAttachment(
