@@ -90,4 +90,10 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
             .bodyValue(body)
             .exchange()
     }
+
+    fun getInternalGroupAttachment(groupId: String, attachmentId: String): ResponseSpec {
+        return webClient.get()
+            .uri(URI("$INTERNAL/groups/$groupId/attachments/$attachmentId"))
+            .exchange()
+    }
 }
