@@ -8,13 +8,13 @@ import org.springframework.http.HttpStatus.OK
 import org.springframework.http.HttpStatusCode
 import pl.edu.agh.gem.headers.HeadersTestUtils.withAppContentType
 import pl.edu.agh.gem.integration.environment.ProjectConfig.wiremock
+import pl.edu.agh.gem.paths.Paths.INTERNAL
 
-private fun createMembersUrl(groupId: String) =
-    "/internal/members/$groupId"
+private fun createUserGroupsUrl(userId: String) = "$INTERNAL/groups/users/$userId"
 
-fun stubGroupManagerMembers(body: Any?, groupId: String, statusCode: HttpStatusCode = OK) {
+fun stubGroupManagerUserGroups(body: Any?, userId: String, statusCode: HttpStatusCode = OK) {
     wiremock.stubFor(
-        get(urlMatching(createMembersUrl(groupId)))
+        get(urlMatching(createUserGroupsUrl(userId)))
             .willReturn(
                 aResponse()
                     .withStatus(statusCode.value())

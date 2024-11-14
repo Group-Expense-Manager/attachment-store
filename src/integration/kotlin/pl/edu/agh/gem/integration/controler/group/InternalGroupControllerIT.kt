@@ -14,11 +14,9 @@ import pl.edu.agh.gem.external.dto.GroupAttachmentResponse
 import pl.edu.agh.gem.external.mapper.DefaultAttachmentMapper.Companion.CREATED_AT_HEADER
 import pl.edu.agh.gem.external.mapper.DefaultAttachmentMapper.Companion.UPDATED_AT_HEADER
 import pl.edu.agh.gem.helper.group.DummyGroup.GROUP_ID
-import pl.edu.agh.gem.helper.group.createGroupMembersResponse
 import pl.edu.agh.gem.helper.user.createGemUser
 import pl.edu.agh.gem.integration.BaseIntegrationSpec
 import pl.edu.agh.gem.integration.ability.ServiceTestClient
-import pl.edu.agh.gem.integration.ability.stubGroupManagerMembers
 import pl.edu.agh.gem.internal.persistence.GroupAttachmentRepository
 import pl.edu.agh.gem.util.TestHelper.CSV_FILE
 import pl.edu.agh.gem.util.TestHelper.EMPTY_FILE
@@ -65,9 +63,7 @@ class InternalGroupControllerIT(
         // given
         val user = createGemUser()
         val data = SMALL_FILE
-        val groupMembers = createGroupMembersResponse(user.id)
         val groupId = GROUP_ID
-        stubGroupManagerMembers(groupMembers, groupId, OK)
 
         // when
         val response = service.createInternalGroupAttachment(data, user.id, groupId)
@@ -83,9 +79,7 @@ class InternalGroupControllerIT(
         // given
         val user = createGemUser()
         val data = LARGE_FILE
-        val groupMembers = createGroupMembersResponse(user.id)
         val groupId = GROUP_ID
-        stubGroupManagerMembers(groupMembers, groupId, OK)
 
         // when
         val response = service.createInternalGroupAttachment(data, user.id, groupId)
@@ -101,9 +95,7 @@ class InternalGroupControllerIT(
         // given
         val user = createGemUser()
         val data = CSV_FILE
-        val groupMembers = createGroupMembersResponse(user.id)
         val groupId = GROUP_ID
-        stubGroupManagerMembers(groupMembers, groupId, OK)
 
         // when
         val response = service.createInternalGroupAttachment(data, user.id, groupId)
@@ -119,9 +111,7 @@ class InternalGroupControllerIT(
         // given
         val user = createGemUser()
         val data = EMPTY_FILE
-        val groupMembers = createGroupMembersResponse(user.id)
         val groupId = GROUP_ID
-        stubGroupManagerMembers(groupMembers, groupId, OK)
 
         // when
         val response = service.createInternalGroupAttachment(data, user.id, groupId)
