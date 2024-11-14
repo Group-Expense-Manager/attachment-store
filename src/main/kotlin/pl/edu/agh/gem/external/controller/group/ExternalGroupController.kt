@@ -68,6 +68,6 @@ class ExternalGroupController(
     }
 
     private fun String.checkIfUserHaveAccess(groupId: String) {
-        groupManagerClient.getGroupMembers(groupId).members.find { it.id == this } ?: throw UserWithoutGroupAccessException(this)
+        groupManagerClient.getGroups(this).find { it.groupId == groupId } ?: throw UserWithoutGroupAccessException(this)
     }
 }

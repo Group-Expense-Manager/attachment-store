@@ -19,12 +19,12 @@ import pl.edu.agh.gem.external.dto.GroupAttachmentResponse
 import pl.edu.agh.gem.external.mapper.DefaultAttachmentMapper.Companion.CREATED_AT_HEADER
 import pl.edu.agh.gem.external.mapper.DefaultAttachmentMapper.Companion.UPDATED_AT_HEADER
 import pl.edu.agh.gem.helper.group.DummyGroup.GROUP_ID
-import pl.edu.agh.gem.helper.group.createGroupMembersResponse
-import pl.edu.agh.gem.helper.user.DummyUser.OTHER_USER_ID
+import pl.edu.agh.gem.helper.group.DummyGroup.OTHER_GROUP_ID
+import pl.edu.agh.gem.helper.user.DummyUser.USER_ID
 import pl.edu.agh.gem.helper.user.createGemUser
 import pl.edu.agh.gem.integration.BaseIntegrationSpec
 import pl.edu.agh.gem.integration.ability.ServiceTestClient
-import pl.edu.agh.gem.integration.ability.stubGroupManagerMembers
+import pl.edu.agh.gem.integration.ability.stubGroupManagerUserGroups
 import pl.edu.agh.gem.internal.persistence.GroupAttachmentRepository
 import pl.edu.agh.gem.util.TestHelper.CSV_FILE
 import pl.edu.agh.gem.util.TestHelper.EMPTY_FILE
@@ -33,6 +33,7 @@ import pl.edu.agh.gem.util.TestHelper.LITTLE_FILE
 import pl.edu.agh.gem.util.TestHelper.OTHER_SMALL_FILE
 import pl.edu.agh.gem.util.TestHelper.SMALL_FILE
 import pl.edu.agh.gem.util.createGroupAttachment
+import pl.edu.agh.gem.util.createUserGroupsResponse
 
 class ExternalGroupControllerIT(
     private val service: ServiceTestClient,
@@ -42,9 +43,8 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val data = SMALL_FILE
-        val groupMembers = createGroupMembersResponse(user.id)
         val groupId = GROUP_ID
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(groupId, OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.createGroupAttachment(data, user, groupId)
@@ -60,9 +60,8 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val data = LARGE_FILE
-        val groupMembers = createGroupMembersResponse(user.id)
         val groupId = GROUP_ID
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(groupId, OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.createGroupAttachment(data, user, groupId)
@@ -75,9 +74,8 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val data = CSV_FILE
-        val groupMembers = createGroupMembersResponse(user.id)
         val groupId = GROUP_ID
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(groupId, OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.createGroupAttachment(data, user, groupId)
@@ -90,9 +88,8 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val data = SMALL_FILE
-        val groupMembers = createGroupMembersResponse(OTHER_USER_ID)
         val groupId = GROUP_ID
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.createGroupAttachment(data, user, groupId)
@@ -105,9 +102,8 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val data = EMPTY_FILE
-        val groupMembers = createGroupMembersResponse(user.id)
         val groupId = GROUP_ID
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(groupId, OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.createGroupAttachment(data, user, groupId)
@@ -119,12 +115,11 @@ class ExternalGroupControllerIT(
     should("get attachment") {
         // given
         val user = createGemUser()
-        val groupMembers = createGroupMembersResponse(user.id)
         val groupAttachment = createGroupAttachment(
             file = Binary(LITTLE_FILE),
         )
         repository.save(groupAttachment)
-        stubGroupManagerMembers(groupMembers, groupAttachment.groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(GROUP_ID, OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.getGroupAttachment(user, groupAttachment.groupId, groupAttachment.id)
@@ -143,12 +138,11 @@ class ExternalGroupControllerIT(
     should("forbid access when user without permission try to get attachment") {
         // given
         val user = createGemUser()
-        val groupMembers = createGroupMembersResponse(OTHER_USER_ID)
         val groupAttachment = createGroupAttachment(
             file = Binary(LITTLE_FILE),
         )
         repository.save(groupAttachment)
-        stubGroupManagerMembers(groupMembers, groupAttachment.groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.getGroupAttachment(user, groupAttachment.groupId, groupAttachment.id)
@@ -161,9 +155,8 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val groupId = GROUP_ID
-        val groupMembers = createGroupMembersResponse(user.id)
         val groupAttachment = createGroupAttachment()
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(groupId, OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.getGroupAttachment(user, groupId, groupAttachment.id)
@@ -176,7 +169,6 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val groupId = GROUP_ID
-        val groupMembers = createGroupMembersResponse(user.id)
         val attachment = createGroupAttachment(
             groupId = groupId,
             file = Binary(SMALL_FILE),
@@ -189,7 +181,7 @@ class ExternalGroupControllerIT(
             uploadedByUser = user.id,
         )
         repository.save(attachment)
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(groupId, OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.updateGroupAttachment(newAttachment.file.data, user, newAttachment.id, newAttachment.groupId)
@@ -206,13 +198,12 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val groupId = GROUP_ID
-        val groupMembers = createGroupMembersResponse(user.id)
         val newAttachment = createGroupAttachment(
             groupId = groupId,
             file = Binary(OTHER_SMALL_FILE),
             uploadedByUser = "otherUser",
         )
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(groupId, OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.updateGroupAttachment(newAttachment.file.data, user, newAttachment.id, groupId)
@@ -225,7 +216,6 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val groupId = GROUP_ID
-        val groupMembers = createGroupMembersResponse(user.id)
         val attachment = createGroupAttachment(
             groupId = groupId,
             file = Binary(SMALL_FILE),
@@ -238,7 +228,7 @@ class ExternalGroupControllerIT(
             uploadedByUser = user.id,
         )
         repository.save(attachment)
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(groupId, OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.updateGroupAttachment(newAttachment.file.data, user, newAttachment.id, newAttachment.groupId)
@@ -252,7 +242,6 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val groupId = GROUP_ID
-        val groupMembers = createGroupMembersResponse(user.id)
         val attachment = createGroupAttachment(
             groupId = groupId,
             file = Binary(SMALL_FILE),
@@ -265,7 +254,7 @@ class ExternalGroupControllerIT(
             uploadedByUser = user.id,
         )
         repository.save(attachment)
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(groupId, OTHER_GROUP_ID), USER_ID)
 
         // when
         val response = service.updateGroupAttachment(newAttachment.file.data, user, newAttachment.id, newAttachment.groupId)
@@ -279,7 +268,6 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val groupId = GROUP_ID
-        val groupMembers = createGroupMembersResponse(OTHER_USER_ID)
         val attachment = createGroupAttachment(
             groupId = groupId,
             file = Binary(SMALL_FILE),
@@ -291,7 +279,7 @@ class ExternalGroupControllerIT(
             file = Binary(OTHER_SMALL_FILE),
             uploadedByUser = user.id,
         )
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(OTHER_GROUP_ID), USER_ID)
         repository.save(attachment)
 
         // when
@@ -306,7 +294,6 @@ class ExternalGroupControllerIT(
         // given
         val user = createGemUser()
         val groupId = GROUP_ID
-        val groupMembers = createGroupMembersResponse(OTHER_USER_ID)
         val attachment = createGroupAttachment(
             groupId = groupId,
             file = Binary(SMALL_FILE),
@@ -320,7 +307,7 @@ class ExternalGroupControllerIT(
             uploadedByUser = user.id,
             strictAccess = true,
         )
-        stubGroupManagerMembers(groupMembers, groupId, OK)
+        stubGroupManagerUserGroups(createUserGroupsResponse(groupId, OTHER_GROUP_ID), USER_ID)
         repository.save(attachment)
 
         // when

@@ -1,9 +1,9 @@
 package pl.edu.agh.gem.internal.client
 
-import pl.edu.agh.gem.model.GroupMembers
+import pl.edu.agh.gem.internal.model.Group
 
 interface GroupManagerClient {
-    fun getGroupMembers(groupId: String): GroupMembers
+    fun getGroups(userId: String): List<Group>
 }
 
 class GroupManagerClientException(override val message: String?) : RuntimeException()

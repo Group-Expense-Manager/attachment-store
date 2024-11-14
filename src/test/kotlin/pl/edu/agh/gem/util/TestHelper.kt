@@ -2,9 +2,13 @@ package pl.edu.agh.gem.util
 
 import org.bson.types.Binary
 import org.springframework.http.MediaType.IMAGE_JPEG_VALUE
+import pl.edu.agh.gem.external.dto.GroupDTO
+import pl.edu.agh.gem.external.dto.UserGroupsResponse
 import pl.edu.agh.gem.external.persistence.AttachmentHistoryEntity
 import pl.edu.agh.gem.external.persistence.group.GroupAttachmentEntity
 import pl.edu.agh.gem.external.persistence.user.UserAttachmentEntity
+import pl.edu.agh.gem.helper.group.DummyGroup.GROUP_ID
+import pl.edu.agh.gem.helper.group.DummyGroup.OTHER_GROUP_ID
 import pl.edu.agh.gem.internal.model.AttachmentHistory
 import pl.edu.agh.gem.internal.model.GroupAttachment
 import pl.edu.agh.gem.internal.model.UserAttachment
@@ -169,3 +173,7 @@ fun createUserAttachmentEntity(
         ),
     ),
 )
+
+fun createUserGroupsResponse(
+    vararg groups: String = arrayOf(GROUP_ID, OTHER_GROUP_ID),
+) = UserGroupsResponse(groups = groups.map { GroupDTO(it) })
