@@ -28,6 +28,8 @@ updates:
       - maven-google
       - gradle-plugin
       - gem-lib
+    commit-message:
+      prefix: "GEM-241 | "
     schedule:
       interval: "daily"
     groups:
@@ -38,6 +40,8 @@ updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
+    commit-message:
+      prefix: "GEM-241 | "
     schedule:
       interval: "daily"
     groups:
