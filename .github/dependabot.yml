@@ -5,13 +5,13 @@
 
 version: 2
 registries:
-  google:
+  maven-google:
     type: maven-repository
-    url: "https://dl.google.com/dl/android/maven2"
+    url: "https://maven.google.com"
   maven-central:
     type: maven-repository
     url: "https://repo.maven.apache.org/maven2"
-  gradle-plugin-portal:
+  gradle-plugin:
     type: maven-repository
     url: "https://plugins.gradle.org/m2"
   gem-lib:
@@ -23,10 +23,15 @@ registries:
 updates:
   - package-ecosystem: "gradle"
     directory: "/"
-    registries: "*"
+    registries:
+      - maven-central
+      - maven-google
+      - gradle-plugin
+      - gem-lib
     target-branch: "GEM-241"
     commit-message:
-      prefix: "GEM-241 | "
+      prefix: "GEM-241 | (deps)"
+      prefix-development: "GEM-241 | (deps)"
     schedule:
       interval: "daily"
     groups:
@@ -39,7 +44,8 @@ updates:
     directory: "/"
     target-branch: "GEM-241"
     commit-message:
-      prefix: "GEM-241 | "
+      prefix: "GEM-241 | (deps)"
+      prefix-development: "GEM-241 | (deps)"
     schedule:
       interval: "daily"
     groups:
