@@ -28,10 +28,6 @@ updates:
       - maven-google
       - gradle-plugin
       - gem-lib
-    target-branch: "GEM-241"
-    commit-message:
-      prefix: "GEM-241 | (deps)"
-      prefix-development: "GEM-241 | (deps)"
     schedule:
       interval: "daily"
     groups:
@@ -42,10 +38,6 @@ updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
-    target-branch: "GEM-241"
-    commit-message:
-      prefix: "GEM-241 | (deps)"
-      prefix-development: "GEM-241 | (deps)"
     schedule:
       interval: "daily"
     groups:
