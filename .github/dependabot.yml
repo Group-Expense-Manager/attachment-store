@@ -35,13 +35,10 @@ updates:
       all-dependencies:
         patterns:
           - "*"
-    allow:
-      - dependency-type: "direct"
-      - dependency-type: "indirect"
-    update-types:
-      - "patch"
-      - "minor"
-      - "major"
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
 
   # Update GitHub Actions
   - package-ecosystem: "github-actions"
@@ -54,7 +51,7 @@ updates:
       all-dependencies:
         patterns:
           - "*"
-    update-types:
-      - "patch"
-      - "minor"
-      - "major"
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
