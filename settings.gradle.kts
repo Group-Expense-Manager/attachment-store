@@ -32,9 +32,9 @@ dependencyResolutionManagement {
             version("tika", "3.0.0")
             version("dependency-management", "1.1.4")
 
-            library("guava", "com.google.guava:guava:33.1.0-jre")
+            library("guava", "com.google.guava:guava:33.4.0-jre")
             library("kotlinlogging", "io.github.microutils:kotlin-logging:3.0.5")
-            library("lib-gem", "pl.edu.agh.gem:lib-gem:0.3.0")
+            library("lib-gem", "pl.edu.agh.gem:lib-gem:0.5.0")
 
             library("tika-parsers", "org.apache.tika", "tika-parsers").versionRef("tika")
             library("tika-core", "org.apache.tika", "tika-core").versionRef("tika")
@@ -74,12 +74,12 @@ dependencyResolutionManagement {
             library("kotest-testcontainers", "io.kotest.extensions", "kotest-extensions-testcontainers").version(
                 "2.0.2",
             )
-            library("mockito", "org.mockito.kotlin:mockito-kotlin:5.2.1")
-            library("archunit", "com.tngtech.archunit:archunit-junit5:1.2.1")
+            library("mockito", "org.mockito.kotlin:mockito-kotlin:5.4.0")
+            library("archunit", "com.tngtech.archunit:archunit-junit5:1.3.0")
 
-            library("kotest-spring", "io.kotest.extensions:kotest-extensions-spring:1.1.3")
-            library("kotest-wiremock", "io.kotest.extensions:kotest-extensions-wiremock:3.0.1")
-            library("junit", "org.junit.jupiter:junit-jupiter-engine:5.10.2")
+            library("kotest-spring", "io.kotest.extensions:kotest-extensions-spring:1.3.0")
+            library("kotest-wiremock", "io.kotest.extensions:kotest-extensions-wiremock:3.1.0")
+            library("junit", "org.junit.jupiter:junit-jupiter-engine:5.11.4")
             library("testcontainers-core", "org.testcontainers", "testcontainers").versionRef("testcontainers")
             library("testcontainers-mongodb", "org.testcontainers", "mongodb").versionRef("testcontainers")
 
