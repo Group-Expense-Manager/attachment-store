@@ -24,47 +24,63 @@ class GroupService(
     ): GroupAttachment {
         val size = fileDetector.getFileSize(data, restriction)
         val contentType = fileDetector.getFileMediaType(data, restriction)
-        val groupAttachment = GroupAttachment(
-            groupId = groupId,
-            uploadedByUser = userId,
-            contentType = contentType,
-            sizeInBytes = size,
-            strictAccess = strictAccess,
-            file = Binary(data),
-            attachmentHistory = listOf(createNewAttachmentHistory(userId, size, contentType)),
-        )
+        val groupAttachment =
+            GroupAttachment(
+                groupId = groupId,
+                uploadedByUser = userId,
+                contentType = contentType,
+                sizeInBytes = size,
+                strictAccess = strictAccess,
+                file = Binary(data),
+                attachmentHistory = listOf(createNewAttachmentHistory(userId, size, contentType)),
+            )
         return groupAttachmentRepository.save(groupAttachment)
     }
 
-    fun updateAttachment(data: ByteArray, attachmentId: String, groupId: String, userId: String): GroupAttachment {
+    fun updateAttachment(
+        data: ByteArray,
+        attachmentId: String,
+        groupId: String,
+        userId: String,
+    ): GroupAttachment {
         val attachment = getAttachment(groupId, attachmentId)
         attachment.checkUserPerformUpdate(userId)
 
         val size = fileDetector.getFileSize(data)
         val contentType = fileDetector.getFileMediaType(data)
 
-        val updatedAttachment = attachment.copy(
-            file = Binary(data),
-            uploadedByUser = userId,
-            sizeInBytes = size,
-            contentType = contentType,
-            updatedAt = now(),
-            attachmentHistory = attachment.attachmentHistory + createNewAttachmentHistory(userId, size, contentType),
-        )
+        val updatedAttachment =
+            attachment.copy(
+                file = Binary(data),
+                uploadedByUser = userId,
+                sizeInBytes = size,
+                contentType = contentType,
+                updatedAt = now(),
+                attachmentHistory = attachment.attachmentHistory + createNewAttachmentHistory(userId, size, contentType),
+            )
 
         return groupAttachmentRepository.save(updatedAttachment)
     }
 
-    fun getAttachment(groupId: String, attachmentId: String): GroupAttachment {
+    fun getAttachment(
+        groupId: String,
+        attachmentId: String,
+    ): GroupAttachment {
         return groupAttachmentRepository.getGroupAttachment(attachmentId, groupId)
     }
 
-    fun generateGroupImage(groupId: String, userId: String): GroupAttachment {
+    fun generateGroupImage(
+        groupId: String,
+        userId: String,
+    ): GroupAttachment {
         val generateImage = fileLoader.loadRandomGroupImage()
         return saveAttachment(generateImage, groupId, userId, false)
     }
 
-    fun generateBlankImage(groupId: String, userId: String): GroupAttachment {
+    fun generateBlankImage(
+        groupId: String,
+        userId: String,
+    ): GroupAttachment {
         val generateImage = fileLoader.loadRandomBlankImage()
         return saveAttachment(generateImage, groupId, userId, true)
     }

@@ -11,17 +11,17 @@ import pl.edu.agh.gem.integration.ability.ServiceTestClient
 class InternalUserControllerIT(
     private val service: ServiceTestClient,
 ) : BaseIntegrationSpec({
-    should("generate user attachment") {
-        // given
-        val user = createGemUser()
+        should("generate user attachment") {
+            // given
+            val user = createGemUser()
 
-        // when
-        val response = service.generateUserAttachment(user.id)
+            // when
+            val response = service.generateUserAttachment(user.id)
 
-        // then
-        response shouldHaveHttpStatus CREATED
-        response.expectBody(UserAttachmentResponse::class.java).returnResult().responseBody?.also {
-            it.id.shouldNotBeNull()
+            // then
+            response shouldHaveHttpStatus CREATED
+            response.expectBody(UserAttachmentResponse::class.java).returnResult().responseBody?.also {
+                it.id.shouldNotBeNull()
+            }
         }
-    }
-},)
+    })

@@ -16,38 +16,38 @@ import pl.edu.agh.gem.util.createUserGroupsResponse
 class GroupManagerClientIT(
     private val groupManagerClient: GroupManagerClient,
 ) : BaseIntegrationSpec({
-    should("get user groups") {
-        // given
-        val userGroups = arrayOf(GROUP_ID, OTHER_GROUP_ID)
-        val userGroupsResponse = createUserGroupsResponse(GROUP_ID, OTHER_GROUP_ID)
-        stubGroupManagerUserGroups(userGroupsResponse, USER_ID)
+        should("get user groups") {
+            // given
+            val userGroups = arrayOf(GROUP_ID, OTHER_GROUP_ID)
+            val userGroupsResponse = createUserGroupsResponse(GROUP_ID, OTHER_GROUP_ID)
+            stubGroupManagerUserGroups(userGroupsResponse, USER_ID)
 
-        // when
-        val result = groupManagerClient.getGroups(USER_ID)
+            // when
+            val result = groupManagerClient.getGroups(USER_ID)
 
-        // then
-        result.all {
-            it.groupId in userGroups
+            // then
+            result.all {
+                it.groupId in userGroups
+            }
         }
-    }
 
-    should("throw GroupManagerClientException when we send bad request") {
-        // given
-        stubGroupManagerUserGroups(createUserGroupsResponse(), USER_ID, NOT_ACCEPTABLE)
+        should("throw GroupManagerClientException when we send bad request") {
+            // given
+            stubGroupManagerUserGroups(createUserGroupsResponse(), USER_ID, NOT_ACCEPTABLE)
 
-        // when & then
-        shouldThrow<GroupManagerClientException> {
-            groupManagerClient.getGroups(USER_ID)
+            // when & then
+            shouldThrow<GroupManagerClientException> {
+                groupManagerClient.getGroups(USER_ID)
+            }
         }
-    }
 
-    should("throw RetryableGroupManagerClientException when client has internal error") {
-        // given
-        stubGroupManagerUserGroups(createUserGroupsResponse(), USER_ID, INTERNAL_SERVER_ERROR)
+        should("throw RetryableGroupManagerClientException when client has internal error") {
+            // given
+            stubGroupManagerUserGroups(createUserGroupsResponse(), USER_ID, INTERNAL_SERVER_ERROR)
 
-        // when & then
-        shouldThrow<RetryableGroupManagerClientException> {
-            groupManagerClient.getGroups(USER_ID)
+            // when & then
+            shouldThrow<RetryableGroupManagerClientException> {
+                groupManagerClient.getGroups(USER_ID)
+            }
         }
-    }
-},)
+    })

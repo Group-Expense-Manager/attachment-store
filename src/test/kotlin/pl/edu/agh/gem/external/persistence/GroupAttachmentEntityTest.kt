@@ -48,4 +48,4 @@ class GroupAttachmentEntityTest : ShouldSpec({
         groupAttachment.updatedAt shouldBe groupAttachmentEntity.updatedAt
         groupAttachment.attachmentHistory shouldBe groupAttachmentEntity.attachmentHistory.map { attachmentHistory -> attachmentHistory.toDomain() }
     }
-},)
+})

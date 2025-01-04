@@ -34,169 +34,177 @@ class ExternalUserControllerIT(
     private val service: ServiceTestClient,
     private val repository: UserAttachmentRepository,
 ) : BaseIntegrationSpec({
-    should("save user attachment") {
-        // given
-        val user = createGemUser()
-        val data = SMALL_FILE
+        should("save user attachment") {
+            // given
+            val user = createGemUser()
+            val data = SMALL_FILE
 
-        // when
-        val response = service.createUserAttachment(data, user)
+            // when
+            val response = service.createUserAttachment(data, user)
 
-        // then
-        response shouldHaveHttpStatus CREATED
-        response.expectBody(UserAttachmentResponse::class.java).returnResult().responseBody?.also {
-            it.id.shouldNotBeNull()
+            // then
+            response shouldHaveHttpStatus CREATED
+            response.expectBody(UserAttachmentResponse::class.java).returnResult().responseBody?.also {
+                it.id.shouldNotBeNull()
+            }
         }
-    }
 
-    should("not save user attachment when file is too large") {
-        // given
-        val user = createGemUser()
-        val data = LARGE_FILE
+        should("not save user attachment when file is too large") {
+            // given
+            val user = createGemUser()
+            val data = LARGE_FILE
 
-        // when
-        val response = service.createUserAttachment(data, user)
+            // when
+            val response = service.createUserAttachment(data, user)
 
-        // then
-        response shouldHaveHttpStatus PAYLOAD_TOO_LARGE
-    }
-
-    should("not save user attachment when media is not supported") {
-        // given
-        val user = createGemUser()
-        val data = CSV_FILE
-
-        // when
-        val response = service.createUserAttachment(data, user)
-
-        // then
-        response shouldHaveHttpStatus UNSUPPORTED_MEDIA_TYPE
-    }
-
-    should("not save user attachment when data is empty") {
-        // given
-        val user = createGemUser()
-        val data = EMPTY_FILE
-
-        // when
-        val response = service.createUserAttachment(data, user)
-
-        // then
-        response shouldHaveHttpStatus BAD_REQUEST
-    }
-
-    should("get user attachment") {
-        // given
-        val user = createGemUser()
-        val userAttachment = createUserAttachment(
-            file = Binary(LITTLE_FILE),
-        )
-        repository.save(userAttachment)
-
-        // when
-        val response = service.getUserAttachment(user.id, userAttachment.id)
-
-        // then
-        response shouldHaveHttpStatus OK
-        response.shouldHaveBody(userAttachment.file.data)
-        response.expectHeader().also {
-            it.valueEquals(CONTENT_LENGTH, userAttachment.sizeInBytes.toString())
-            it.valueEquals(CONTENT_TYPE, userAttachment.contentType)
-            it.valueEquals(CREATED_AT_HEADER, userAttachment.createdAt.toString())
-            it.valueEquals(UPDATED_AT_HEADER, userAttachment.updatedAt.toString())
+            // then
+            response shouldHaveHttpStatus PAYLOAD_TOO_LARGE
         }
-    }
 
-    should("return not found when user attachment not exists") {
-        // given
-        val user = createGemUser()
-        val userAttachment = createUserAttachment()
+        should("not save user attachment when media is not supported") {
+            // given
+            val user = createGemUser()
+            val data = CSV_FILE
 
-        // when
-        val response = service.getUserAttachment(user.id, userAttachment.id)
+            // when
+            val response = service.createUserAttachment(data, user)
 
-        // then
-        response shouldHaveHttpStatus NOT_FOUND
-    }
-
-    should("update user attachment") {
-        // given
-        val user = createGemUser()
-        val attachment = createUserAttachment(
-            userId = user.id,
-            file = Binary(SMALL_FILE),
-        )
-        val newAttachment = createUserAttachment(
-            id = attachment.id,
-            userId = user.id,
-            file = Binary(OTHER_SMALL_FILE),
-        )
-        repository.save(attachment)
-
-        // when
-        val response = service.updateUserAttachment(newAttachment.file.data, user, newAttachment.id)
-
-        // then
-        response shouldHaveHttpStatus OK
-        response.shouldBody<GroupAttachmentResponse> {
-            this.id shouldBe newAttachment.id
+            // then
+            response shouldHaveHttpStatus UNSUPPORTED_MEDIA_TYPE
         }
-    }
 
-    should("return not found when user attachment not exists while trying to update attachment") {
-        // given
-        val user = createGemUser()
-        val newAttachment = createUserAttachment(
-            file = Binary(OTHER_SMALL_FILE),
-            userId = "otherUser",
-        )
+        should("not save user attachment when data is empty") {
+            // given
+            val user = createGemUser()
+            val data = EMPTY_FILE
 
-        // when
-        val response = service.updateUserAttachment(newAttachment.file.data, user, newAttachment.id)
+            // when
+            val response = service.createUserAttachment(data, user)
 
-        // then
-        response shouldHaveHttpStatus NOT_FOUND
-    }
+            // then
+            response shouldHaveHttpStatus BAD_REQUEST
+        }
 
-    should("not update user attachment when file is too large") {
-        // given
-        val user = createGemUser()
-        val attachment = createUserAttachment(
-            file = Binary(SMALL_FILE),
-            userId = user.id,
-        )
-        val newAttachment = createUserAttachment(
-            id = attachment.id,
-            file = Binary(LARGE_FILE),
-            userId = user.id,
-        )
-        repository.save(attachment)
+        should("get user attachment") {
+            // given
+            val user = createGemUser()
+            val userAttachment =
+                createUserAttachment(
+                    file = Binary(LITTLE_FILE),
+                )
+            repository.save(userAttachment)
 
-        // when
-        val response = service.updateUserAttachment(newAttachment.file.data, user, newAttachment.id)
+            // when
+            val response = service.getUserAttachment(user.id, userAttachment.id)
 
-        // then
-        response shouldHaveHttpStatus PAYLOAD_TOO_LARGE
-    }
+            // then
+            response shouldHaveHttpStatus OK
+            response.shouldHaveBody(userAttachment.file.data)
+            response.expectHeader().also {
+                it.valueEquals(CONTENT_LENGTH, userAttachment.sizeInBytes.toString())
+                it.valueEquals(CONTENT_TYPE, userAttachment.contentType)
+                it.valueEquals(CREATED_AT_HEADER, userAttachment.createdAt.toString())
+                it.valueEquals(UPDATED_AT_HEADER, userAttachment.updatedAt.toString())
+            }
+        }
 
-    should("not update user attachment when media is not supported") {
-        // given
-        val user = createGemUser()
-        val attachment = createUserAttachment(
-            file = Binary(SMALL_FILE),
-            userId = user.id,
-        )
-        val newAttachment = createUserAttachment(
-            id = attachment.id,
-            file = Binary(CSV_FILE),
-            userId = user.id,
-        )
-        repository.save(attachment)
+        should("return not found when user attachment not exists") {
+            // given
+            val user = createGemUser()
+            val userAttachment = createUserAttachment()
 
-        // when
-        val response = service.updateUserAttachment(newAttachment.file.data, user, newAttachment.id)
+            // when
+            val response = service.getUserAttachment(user.id, userAttachment.id)
 
-        // then
-        response shouldHaveHttpStatus UNSUPPORTED_MEDIA_TYPE
-    }
-},)
+            // then
+            response shouldHaveHttpStatus NOT_FOUND
+        }
+
+        should("update user attachment") {
+            // given
+            val user = createGemUser()
+            val attachment =
+                createUserAttachment(
+                    userId = user.id,
+                    file = Binary(SMALL_FILE),
+                )
+            val newAttachment =
+                createUserAttachment(
+                    id = attachment.id,
+                    userId = user.id,
+                    file = Binary(OTHER_SMALL_FILE),
+                )
+            repository.save(attachment)
+
+            // when
+            val response = service.updateUserAttachment(newAttachment.file.data, user, newAttachment.id)
+
+            // then
+            response shouldHaveHttpStatus OK
+            response.shouldBody<GroupAttachmentResponse> {
+                this.id shouldBe newAttachment.id
+            }
+        }
+
+        should("return not found when user attachment not exists while trying to update attachment") {
+            // given
+            val user = createGemUser()
+            val newAttachment =
+                createUserAttachment(
+                    file = Binary(OTHER_SMALL_FILE),
+                    userId = "otherUser",
+                )
+
+            // when
+            val response = service.updateUserAttachment(newAttachment.file.data, user, newAttachment.id)
+
+            // then
+            response shouldHaveHttpStatus NOT_FOUND
+        }
+
+        should("not update user attachment when file is too large") {
+            // given
+            val user = createGemUser()
+            val attachment =
+                createUserAttachment(
+                    file = Binary(SMALL_FILE),
+                    userId = user.id,
+                )
+            val newAttachment =
+                createUserAttachment(
+                    id = attachment.id,
+                    file = Binary(LARGE_FILE),
+                    userId = user.id,
+                )
+            repository.save(attachment)
+
+            // when
+            val response = service.updateUserAttachment(newAttachment.file.data, user, newAttachment.id)
+
+            // then
+            response shouldHaveHttpStatus PAYLOAD_TOO_LARGE
+        }
+
+        should("not update user attachment when media is not supported") {
+            // given
+            val user = createGemUser()
+            val attachment =
+                createUserAttachment(
+                    file = Binary(SMALL_FILE),
+                    userId = user.id,
+                )
+            val newAttachment =
+                createUserAttachment(
+                    id = attachment.id,
+                    file = Binary(CSV_FILE),
+                    userId = user.id,
+                )
+            repository.save(attachment)
+
+            // when
+            val response = service.updateUserAttachment(newAttachment.file.data, user, newAttachment.id)
+
+            // then
+            response shouldHaveHttpStatus UNSUPPORTED_MEDIA_TYPE
+        }
+    })

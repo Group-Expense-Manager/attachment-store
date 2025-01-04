@@ -29,123 +29,124 @@ class InternalGroupControllerIT(
     private val service: ServiceTestClient,
     private val repository: GroupAttachmentRepository,
 ) : BaseIntegrationSpec({
-    should("generate group attachment") {
-        // given
-        val user = createGemUser()
-        val groupId = GROUP_ID
+        should("generate group attachment") {
+            // given
+            val user = createGemUser()
+            val groupId = GROUP_ID
 
-        // when
-        val response = service.generateGroupAttachment(user.id, groupId)
+            // when
+            val response = service.generateGroupAttachment(user.id, groupId)
 
-        // then
-        response shouldHaveHttpStatus CREATED
-        response.expectBody(GroupAttachmentResponse::class.java).returnResult().responseBody?.also {
-            it.id.shouldNotBeNull()
+            // then
+            response shouldHaveHttpStatus CREATED
+            response.expectBody(GroupAttachmentResponse::class.java).returnResult().responseBody?.also {
+                it.id.shouldNotBeNull()
+            }
         }
-    }
 
-    should("generate group blank attachment") {
-        // given
-        val user = createGemUser()
-        val groupId = GROUP_ID
+        should("generate group blank attachment") {
+            // given
+            val user = createGemUser()
+            val groupId = GROUP_ID
 
-        // when
-        val response = service.generateGroupBlankAttachment(user.id, groupId)
+            // when
+            val response = service.generateGroupBlankAttachment(user.id, groupId)
 
-        // then
-        response shouldHaveHttpStatus CREATED
-        response.expectBody(GroupAttachmentResponse::class.java).returnResult().responseBody?.also {
-            it.id.shouldNotBeNull()
+            // then
+            response shouldHaveHttpStatus CREATED
+            response.expectBody(GroupAttachmentResponse::class.java).returnResult().responseBody?.also {
+                it.id.shouldNotBeNull()
+            }
         }
-    }
 
-    should("save group attachment") {
-        // given
-        val user = createGemUser()
-        val data = SMALL_FILE
-        val groupId = GROUP_ID
+        should("save group attachment") {
+            // given
+            val user = createGemUser()
+            val data = SMALL_FILE
+            val groupId = GROUP_ID
 
-        // when
-        val response = service.createInternalGroupAttachment(data, user.id, groupId)
+            // when
+            val response = service.createInternalGroupAttachment(data, user.id, groupId)
 
-        // then
-        response shouldHaveHttpStatus CREATED
-        response.expectBody(GroupAttachmentResponse::class.java).returnResult().responseBody?.also {
-            it.id.shouldNotBeNull()
+            // then
+            response shouldHaveHttpStatus CREATED
+            response.expectBody(GroupAttachmentResponse::class.java).returnResult().responseBody?.also {
+                it.id.shouldNotBeNull()
+            }
         }
-    }
 
-    should("save group attachment when file is too large") {
-        // given
-        val user = createGemUser()
-        val data = LARGE_FILE
-        val groupId = GROUP_ID
+        should("save group attachment when file is too large") {
+            // given
+            val user = createGemUser()
+            val data = LARGE_FILE
+            val groupId = GROUP_ID
 
-        // when
-        val response = service.createInternalGroupAttachment(data, user.id, groupId)
+            // when
+            val response = service.createInternalGroupAttachment(data, user.id, groupId)
 
-        // then
-        response shouldHaveHttpStatus CREATED
-        response.expectBody(GroupAttachmentResponse::class.java).returnResult().responseBody?.also {
-            it.id.shouldNotBeNull()
+            // then
+            response shouldHaveHttpStatus CREATED
+            response.expectBody(GroupAttachmentResponse::class.java).returnResult().responseBody?.also {
+                it.id.shouldNotBeNull()
+            }
         }
-    }
 
-    should("save group attachment when media is not supported") {
-        // given
-        val user = createGemUser()
-        val data = CSV_FILE
-        val groupId = GROUP_ID
+        should("save group attachment when media is not supported") {
+            // given
+            val user = createGemUser()
+            val data = CSV_FILE
+            val groupId = GROUP_ID
 
-        // when
-        val response = service.createInternalGroupAttachment(data, user.id, groupId)
+            // when
+            val response = service.createInternalGroupAttachment(data, user.id, groupId)
 
-        // then
-        response shouldHaveHttpStatus CREATED
-        response.expectBody(GroupAttachmentResponse::class.java).returnResult().responseBody?.also {
-            it.id.shouldNotBeNull()
+            // then
+            response shouldHaveHttpStatus CREATED
+            response.expectBody(GroupAttachmentResponse::class.java).returnResult().responseBody?.also {
+                it.id.shouldNotBeNull()
+            }
         }
-    }
 
-    should("not save group attachment when data is empty") {
-        // given
-        val user = createGemUser()
-        val data = EMPTY_FILE
-        val groupId = GROUP_ID
+        should("not save group attachment when data is empty") {
+            // given
+            val user = createGemUser()
+            val data = EMPTY_FILE
+            val groupId = GROUP_ID
 
-        // when
-        val response = service.createInternalGroupAttachment(data, user.id, groupId)
+            // when
+            val response = service.createInternalGroupAttachment(data, user.id, groupId)
 
-        // then
-        response shouldHaveHttpStatus BAD_REQUEST
-    }
-
-    should("get attachment") {
-        // given
-        val groupAttachment = createGroupAttachment(
-            file = Binary(LITTLE_FILE),
-        )
-        repository.save(groupAttachment)
-
-        // when
-        val response = service.getInternalGroupAttachment(groupAttachment.groupId, groupAttachment.id)
-
-        // then
-        response shouldHaveHttpStatus OK
-        response.shouldHaveBody(groupAttachment.file.data)
-        response.expectHeader().also {
-            it.valueEquals(CONTENT_LENGTH, groupAttachment.sizeInBytes.toString())
-            it.valueEquals(CONTENT_TYPE, groupAttachment.contentType)
-            it.valueEquals(CREATED_AT_HEADER, groupAttachment.createdAt.toString())
-            it.valueEquals(UPDATED_AT_HEADER, groupAttachment.updatedAt.toString())
+            // then
+            response shouldHaveHttpStatus BAD_REQUEST
         }
-    }
 
-    should("return not found when attachment not exists") {
-        // given & when
-        val response = service.getInternalGroupAttachment(GROUP_ID, "id")
+        should("get attachment") {
+            // given
+            val groupAttachment =
+                createGroupAttachment(
+                    file = Binary(LITTLE_FILE),
+                )
+            repository.save(groupAttachment)
 
-        // then
-        response shouldHaveHttpStatus NOT_FOUND
-    }
-},)
+            // when
+            val response = service.getInternalGroupAttachment(groupAttachment.groupId, groupAttachment.id)
+
+            // then
+            response shouldHaveHttpStatus OK
+            response.shouldHaveBody(groupAttachment.file.data)
+            response.expectHeader().also {
+                it.valueEquals(CONTENT_LENGTH, groupAttachment.sizeInBytes.toString())
+                it.valueEquals(CONTENT_TYPE, groupAttachment.contentType)
+                it.valueEquals(CREATED_AT_HEADER, groupAttachment.createdAt.toString())
+                it.valueEquals(UPDATED_AT_HEADER, groupAttachment.updatedAt.toString())
+            }
+        }
+
+        should("return not found when attachment not exists") {
+            // given & when
+            val response = service.getInternalGroupAttachment(GROUP_ID, "id")
+
+            // then
+            response shouldHaveHttpStatus NOT_FOUND
+        }
+    })

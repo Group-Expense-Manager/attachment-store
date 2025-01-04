@@ -53,13 +53,14 @@ fun createGroupAttachment(
     strictAccess = strictAccess,
     createdAt = createdAt,
     updatedAt = updatedAt ?: createdAt,
-    attachmentHistory = listOf(
-        createAttachmentHistory(
-            updatedBy = updatedByHistory ?: uploadedByUser,
-            updatedAt = updatedAtHistory ?: createdAt,
-            sizeInBytes = updatedSizeInBytes ?: sizeInBytes,
+    attachmentHistory =
+        listOf(
+            createAttachmentHistory(
+                updatedBy = updatedByHistory ?: uploadedByUser,
+                updatedAt = updatedAtHistory ?: createdAt,
+                sizeInBytes = updatedSizeInBytes ?: sizeInBytes,
+            ),
         ),
-    ),
 )
 
 fun createGroupAttachmentEntity(
@@ -85,13 +86,14 @@ fun createGroupAttachmentEntity(
     strictAccess = strictAccess,
     createdAt = createdAt,
     updatedAt = updatedAt ?: createdAt,
-    attachmentHistory = listOf(
-        createAttachmentHistoryEntity(
-            updatedBy = updatedByHistory ?: uploadedByUser,
-            updatedAt = updatedAtHistory ?: createdAt,
-            sizeInBytes = updatedSizeInBytes ?: sizeInBytes,
+    attachmentHistory =
+        listOf(
+            createAttachmentHistoryEntity(
+                updatedBy = updatedByHistory ?: uploadedByUser,
+                updatedAt = updatedAtHistory ?: createdAt,
+                sizeInBytes = updatedSizeInBytes ?: sizeInBytes,
+            ),
         ),
-    ),
 )
 
 fun createAttachmentHistory(
@@ -137,13 +139,14 @@ fun createUserAttachment(
     file = file,
     createdAt = createdAt,
     updatedAt = updatedAt ?: createdAt,
-    attachmentHistory = listOf(
-        createAttachmentHistory(
-            updatedBy = updatedByHistory ?: userId,
-            updatedAt = updatedAtHistory ?: createdAt,
-            sizeInBytes = updatedSizeInBytes ?: sizeInBytes,
+    attachmentHistory =
+        listOf(
+            createAttachmentHistory(
+                updatedBy = updatedByHistory ?: userId,
+                updatedAt = updatedAtHistory ?: createdAt,
+                sizeInBytes = updatedSizeInBytes ?: sizeInBytes,
+            ),
         ),
-    ),
 )
 
 fun createUserAttachmentEntity(
@@ -165,15 +168,14 @@ fun createUserAttachmentEntity(
     file = file,
     createdAt = createdAt,
     updatedAt = updatedAt ?: createdAt,
-    attachmentHistory = listOf(
-        createAttachmentHistoryEntity(
-            updatedBy = updatedByHistory ?: userId,
-            updatedAt = updatedAtHistory ?: createdAt,
-            sizeInBytes = updatedSizeInBytes ?: sizeInBytes,
+    attachmentHistory =
+        listOf(
+            createAttachmentHistoryEntity(
+                updatedBy = updatedByHistory ?: userId,
+                updatedAt = updatedAtHistory ?: createdAt,
+                sizeInBytes = updatedSizeInBytes ?: sizeInBytes,
+            ),
         ),
-    ),
 )
 
-fun createUserGroupsResponse(
-    vararg groups: String = arrayOf(GROUP_ID, OTHER_GROUP_ID),
-) = UserGroupsResponse(groups = groups.map { GroupDTO(it) })
+fun createUserGroupsResponse(vararg groups: String = arrayOf(GROUP_ID, OTHER_GROUP_ID)) = UserGroupsResponse(groups = groups.map { GroupDTO(it) })

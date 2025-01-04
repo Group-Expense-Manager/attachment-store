@@ -13,7 +13,6 @@ private const val UNIT_SIZE = 2
 
 @Configuration
 class AttachmentConfig {
-
     @Bean
     fun attachmentsLimits(attachmentsProperties: AttachmentProperties): AttachmentsLimits {
         return attachmentsProperties.toAttachmentsLimits()
@@ -33,12 +32,13 @@ data class AttachmentsLimits(
 private fun parseFileSize(size: String): Long {
     val value = size.trim().take(size.length - UNIT_SIZE).toLong()
     val unit = size.trim().takeLast(UNIT_SIZE)
-    val multiplier = when (unit) {
-        "KB" -> KB_MULTIPLIER
-        "MB" -> MB_MULTIPLIER
-        "GB" -> GB_MULTIPLIER
-        else -> DEFAULT_MULTIPLIER
-    }
+    val multiplier =
+        when (unit) {
+            "KB" -> KB_MULTIPLIER
+            "MB" -> MB_MULTIPLIER
+            "GB" -> GB_MULTIPLIER
+            else -> DEFAULT_MULTIPLIER
+        }
 
     return value * multiplier
 }

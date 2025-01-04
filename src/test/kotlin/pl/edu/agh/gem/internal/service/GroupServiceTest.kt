@@ -25,11 +25,12 @@ class GroupServiceTest : ShouldSpec({
     val groupAttachmentRepository = mock<GroupAttachmentRepository>()
     val fileDetector = mock<FileDetector> { }
     val fileLoader = mock<FileLoader> { }
-    val groupService = GroupService(
-        groupAttachmentRepository = groupAttachmentRepository,
-        fileDetector = fileDetector,
-        fileLoader = fileLoader,
-    )
+    val groupService =
+        GroupService(
+            groupAttachmentRepository = groupAttachmentRepository,
+            fileDetector = fileDetector,
+            fileLoader = fileLoader,
+        )
 
     should("save group attachment") {
         // given
@@ -131,18 +132,20 @@ class GroupServiceTest : ShouldSpec({
 
     should("update group attachment") {
         // given
-        val attachment = createGroupAttachment(
-            file = Binary(SMALL_FILE),
-            uploadedByUser = "uploadedByUser",
-            strictAccess = false,
-        )
-        val newAttachment = createGroupAttachment(
-            id = attachment.id,
-            groupId = attachment.groupId,
-            file = Binary(OTHER_SMALL_FILE),
-            uploadedByUser = "otherUser",
-            strictAccess = false,
-        )
+        val attachment =
+            createGroupAttachment(
+                file = Binary(SMALL_FILE),
+                uploadedByUser = "uploadedByUser",
+                strictAccess = false,
+            )
+        val newAttachment =
+            createGroupAttachment(
+                id = attachment.id,
+                groupId = attachment.groupId,
+                file = Binary(OTHER_SMALL_FILE),
+                uploadedByUser = "otherUser",
+                strictAccess = false,
+            )
 
         val data = newAttachment.file.data
         whenever(fileDetector.getFileSize(data)).thenReturn(newAttachment.sizeInBytes)
@@ -176,18 +179,20 @@ class GroupServiceTest : ShouldSpec({
 
     should("update group attachment with strict access") {
         // given
-        val attachment = createGroupAttachment(
-            file = Binary(SMALL_FILE),
-            uploadedByUser = "uploadedByUser",
-            strictAccess = true,
-        )
-        val newAttachment = createGroupAttachment(
-            id = attachment.id,
-            groupId = attachment.groupId,
-            file = Binary(OTHER_SMALL_FILE),
-            uploadedByUser = "uploadedByUser",
-            strictAccess = true,
-        )
+        val attachment =
+            createGroupAttachment(
+                file = Binary(SMALL_FILE),
+                uploadedByUser = "uploadedByUser",
+                strictAccess = true,
+            )
+        val newAttachment =
+            createGroupAttachment(
+                id = attachment.id,
+                groupId = attachment.groupId,
+                file = Binary(OTHER_SMALL_FILE),
+                uploadedByUser = "uploadedByUser",
+                strictAccess = true,
+            )
 
         val data = newAttachment.file.data
         whenever(fileDetector.getFileSize(data)).thenReturn(newAttachment.sizeInBytes)
@@ -221,18 +226,20 @@ class GroupServiceTest : ShouldSpec({
 
     should("throw exception when user are not allowed to update attachment") {
         // given
-        val attachment = createGroupAttachment(
-            file = Binary(SMALL_FILE),
-            uploadedByUser = "uploadedByUser",
-            strictAccess = true,
-        )
-        val newAttachment = createGroupAttachment(
-            id = attachment.id,
-            groupId = attachment.groupId,
-            file = Binary(OTHER_SMALL_FILE),
-            uploadedByUser = "otherUser",
-            strictAccess = true,
-        )
+        val attachment =
+            createGroupAttachment(
+                file = Binary(SMALL_FILE),
+                uploadedByUser = "uploadedByUser",
+                strictAccess = true,
+            )
+        val newAttachment =
+            createGroupAttachment(
+                id = attachment.id,
+                groupId = attachment.groupId,
+                file = Binary(OTHER_SMALL_FILE),
+                uploadedByUser = "otherUser",
+                strictAccess = true,
+            )
 
         val data = newAttachment.file.data
         whenever(fileDetector.getFileSize(data)).thenReturn(newAttachment.sizeInBytes)
@@ -272,4 +279,4 @@ class GroupServiceTest : ShouldSpec({
         groupAttachment.updatedAt shouldBe attachment.updatedAt
         groupAttachment.attachmentHistory shouldBe attachment.attachmentHistory
     }
-},)
+})

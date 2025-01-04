@@ -36,4 +36,4 @@ class AttachmentHistoryEntityTest : ShouldSpec({
             it.sizeInBytes shouldBe attachmentHistoryEntity.sizeInBytes
         }
     }
-},)
+})

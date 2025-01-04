@@ -28,7 +28,6 @@ class ExternalGroupController(
     val attachmentMapper: AttachmentMapper,
     val groupManagerClient: GroupManagerClient,
 ) {
-
     @PostMapping("/{groupId}", produces = [APPLICATION_JSON_INTERNAL_VER_1])
     @ResponseStatus(CREATED)
     fun saveAttachment(

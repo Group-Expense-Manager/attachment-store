@@ -22,24 +22,26 @@ data class UserAttachmentEntity(
     val attachmentHistory: List<AttachmentHistoryEntity>,
 )
 
-fun UserAttachment.toEntity() = UserAttachmentEntity(
-    id = id,
-    userId = userId,
-    contentType = contentType,
-    sizeInBytes = sizeInBytes,
-    file = file,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-    attachmentHistory = attachmentHistory.map { it.toEntity() },
-)
+fun UserAttachment.toEntity() =
+    UserAttachmentEntity(
+        id = id,
+        userId = userId,
+        contentType = contentType,
+        sizeInBytes = sizeInBytes,
+        file = file,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        attachmentHistory = attachmentHistory.map { it.toEntity() },
+    )
 
-fun UserAttachmentEntity.toDomain() = UserAttachment(
-    id = id,
-    userId = userId,
-    contentType = contentType,
-    sizeInBytes = sizeInBytes,
-    file = file,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-    attachmentHistory = attachmentHistory.map { it.toDomain() },
-)
+fun UserAttachmentEntity.toDomain() =
+    UserAttachment(
+        id = id,
+        userId = userId,
+        contentType = contentType,
+        sizeInBytes = sizeInBytes,
+        file = file,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        attachmentHistory = attachmentHistory.map { it.toDomain() },
+    )

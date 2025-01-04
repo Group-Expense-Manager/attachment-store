@@ -11,26 +11,33 @@ import pl.edu.agh.gem.internal.model.UserAttachment
 @Component
 class DefaultAttachmentMapper : AttachmentMapper {
     override fun mapToResponseEntity(attachment: GroupAttachment): HttpEntity<ByteArray> {
-        val headers = prepareHeaders(
-            contentType = attachment.contentType,
-            sizeInBytes = attachment.sizeInBytes.toString(),
-            createdAt = attachment.createdAt.toString(),
-            updatedAt = attachment.updatedAt.toString(),
-        )
+        val headers =
+            prepareHeaders(
+                contentType = attachment.contentType,
+                sizeInBytes = attachment.sizeInBytes.toString(),
+                createdAt = attachment.createdAt.toString(),
+                updatedAt = attachment.updatedAt.toString(),
+            )
         return HttpEntity(attachment.file.data, headers)
     }
 
     override fun mapToResponseEntity(attachment: UserAttachment): HttpEntity<ByteArray> {
-        val headers = prepareHeaders(
-            contentType = attachment.contentType,
-            sizeInBytes = attachment.sizeInBytes.toString(),
-            createdAt = attachment.createdAt.toString(),
-            updatedAt = attachment.updatedAt.toString(),
-        )
+        val headers =
+            prepareHeaders(
+                contentType = attachment.contentType,
+                sizeInBytes = attachment.sizeInBytes.toString(),
+                createdAt = attachment.createdAt.toString(),
+                updatedAt = attachment.updatedAt.toString(),
+            )
         return HttpEntity(attachment.file.data, headers)
     }
 
-    private fun prepareHeaders(contentType: String, sizeInBytes: String, createdAt: String, updatedAt: String): HttpHeaders {
+    private fun prepareHeaders(
+        contentType: String,
+        sizeInBytes: String,
+        createdAt: String,
+        updatedAt: String,
+    ): HttpHeaders {
         val headers = HttpHeaders()
         headers.set(CONTENT_TYPE, contentType)
         headers.set(CONTENT_LENGTH, sizeInBytes)

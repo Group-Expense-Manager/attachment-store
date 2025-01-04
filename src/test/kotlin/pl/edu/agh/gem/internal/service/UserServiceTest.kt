@@ -25,11 +25,12 @@ class UserServiceTest : ShouldSpec({
     val userAttachmentRepository = mock<UserAttachmentRepository>()
     val fileDetector = mock<FileDetector> { }
     val fileLoader = mock<FileLoader> { }
-    val userService = UserService(
-        userAttachmentRepository = userAttachmentRepository,
-        fileDetector = fileDetector,
-        fileLoader = fileLoader,
-    )
+    val userService =
+        UserService(
+            userAttachmentRepository = userAttachmentRepository,
+            fileDetector = fileDetector,
+            fileLoader = fileLoader,
+        )
 
     should("save user attachment") {
         // given
@@ -127,15 +128,17 @@ class UserServiceTest : ShouldSpec({
 
     should("update user attachment") {
         // given
-        val attachment = createUserAttachment(
-            file = Binary(SMALL_FILE),
-            userId = "userId",
-        )
-        val newAttachment = createUserAttachment(
-            id = attachment.id,
-            file = Binary(OTHER_SMALL_FILE),
-            userId = "userId",
-        )
+        val attachment =
+            createUserAttachment(
+                file = Binary(SMALL_FILE),
+                userId = "userId",
+            )
+        val newAttachment =
+            createUserAttachment(
+                id = attachment.id,
+                file = Binary(OTHER_SMALL_FILE),
+                userId = "userId",
+            )
 
         val data = newAttachment.file.data
         whenever(fileDetector.getFileSize(data)).thenReturn(newAttachment.sizeInBytes)
@@ -165,4 +168,4 @@ class UserServiceTest : ShouldSpec({
         groupAttachment.createdAt shouldBe attachment.createdAt
         groupAttachment.attachmentHistory shouldBe newAttachment.attachmentHistory
     }
-},)
+})
