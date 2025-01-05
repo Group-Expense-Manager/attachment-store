@@ -6,5 +6,6 @@ import pl.edu.agh.gem.internal.model.UserAttachment
 
 interface AttachmentMapper {
     fun mapToResponseEntity(attachment: GroupAttachment): HttpEntity<ByteArray>
+
     fun mapToResponseEntity(attachment: UserAttachment): HttpEntity<ByteArray>
 }

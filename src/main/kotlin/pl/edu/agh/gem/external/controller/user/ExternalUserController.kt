@@ -24,7 +24,6 @@ class ExternalUserController(
     val userService: UserService,
     val attachmentMapper: AttachmentMapper,
 ) {
-
     @PostMapping(produces = [APPLICATION_JSON_INTERNAL_VER_1])
     @ResponseStatus(CREATED)
     fun saveAttachment(

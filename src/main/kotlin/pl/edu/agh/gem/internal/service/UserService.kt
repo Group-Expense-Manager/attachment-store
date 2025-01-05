@@ -15,36 +15,48 @@ class UserService(
     private val fileDetector: FileDetector,
     private val fileLoader: FileLoader,
 ) {
-    fun saveAttachment(data: ByteArray, userId: String): UserAttachment {
+    fun saveAttachment(
+        data: ByteArray,
+        userId: String,
+    ): UserAttachment {
         val size = fileDetector.getFileSize(data)
         val contentType = fileDetector.getFileMediaType(data)
-        val groupAttachment = UserAttachment(
-            userId = userId,
-            contentType = contentType,
-            sizeInBytes = size,
-            file = Binary(data),
-            attachmentHistory = listOf(createNewAttachmentHistory(userId, size, contentType)),
-        )
+        val groupAttachment =
+            UserAttachment(
+                userId = userId,
+                contentType = contentType,
+                sizeInBytes = size,
+                file = Binary(data),
+                attachmentHistory = listOf(createNewAttachmentHistory(userId, size, contentType)),
+            )
         return userAttachmentRepository.save(groupAttachment)
     }
 
-    fun updateAttachment(data: ByteArray, attachmentId: String, userId: String): UserAttachment {
+    fun updateAttachment(
+        data: ByteArray,
+        attachmentId: String,
+        userId: String,
+    ): UserAttachment {
         val attachment = getAttachment(userId, attachmentId)
         val size = fileDetector.getFileSize(data)
         val contentType = fileDetector.getFileMediaType(data)
 
-        val updatedAttachment = attachment.copy(
-            file = Binary(data),
-            sizeInBytes = size,
-            contentType = contentType,
-            updatedAt = now(),
-            attachmentHistory = attachment.attachmentHistory + createNewAttachmentHistory(userId, size, contentType),
-        )
+        val updatedAttachment =
+            attachment.copy(
+                file = Binary(data),
+                sizeInBytes = size,
+                contentType = contentType,
+                updatedAt = now(),
+                attachmentHistory = attachment.attachmentHistory + createNewAttachmentHistory(userId, size, contentType),
+            )
 
         return userAttachmentRepository.save(updatedAttachment)
     }
 
-    fun getAttachment(userId: String, attachmentId: String): UserAttachment {
+    fun getAttachment(
+        userId: String,
+        attachmentId: String,
+    ): UserAttachment {
         return userAttachmentRepository.getUserAttachment(attachmentId, userId)
     }
 

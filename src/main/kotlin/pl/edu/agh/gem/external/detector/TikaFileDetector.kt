@@ -1,6 +1,6 @@
 package pl.edu.agh.gem.external.detector
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.tika.Tika
 import org.springframework.stereotype.Component
 import pl.edu.agh.gem.external.config.AttachmentProperties
@@ -12,10 +12,12 @@ class TikaFileDetector(
     private val maxAttachmentSize: AttachmentsLimits,
     private val attachmentProperties: AttachmentProperties,
 ) : FileDetector {
-
     private val tika = Tika()
 
-    override fun getFileMediaType(content: ByteArray, restrictionCheck: Boolean): String {
+    override fun getFileMediaType(
+        content: ByteArray,
+        restrictionCheck: Boolean,
+    ): String {
         val contentType = tika.detect(content.inputStream())
         logger.info { "Detected content type: $contentType" }
         if (restrictionCheck && !attachmentProperties.allowedType.contains(contentType)) {
@@ -24,7 +26,10 @@ class TikaFileDetector(
         return contentType
     }
 
-    override fun getFileSize(content: ByteArray, restrictionCheck: Boolean): Long {
+    override fun getFileSize(
+        content: ByteArray,
+        restrictionCheck: Boolean,
+    ): Long {
         val size = content.size.toLong()
         logger.info { "Detected file size: $size" }
         if (restrictionCheck && size > maxAttachmentSize.maxSizeInBytes) {

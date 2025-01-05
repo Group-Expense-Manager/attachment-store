@@ -49,13 +49,14 @@ class InternalGroupController(
         @RequestParam strictAccess: Boolean = false,
         @RequestParam userId: String,
     ): GroupAttachmentResponse {
-        val attachment = groupService.saveAttachment(
-            data = fileBytes,
-            groupId = groupId,
-            userId = userId,
-            strictAccess = strictAccess,
-            restriction = false,
-        )
+        val attachment =
+            groupService.saveAttachment(
+                data = fileBytes,
+                groupId = groupId,
+                userId = userId,
+                strictAccess = strictAccess,
+                restriction = false,
+            )
         return GroupAttachmentResponse.from(attachment)
     }
 

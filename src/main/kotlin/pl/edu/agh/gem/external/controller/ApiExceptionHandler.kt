@@ -21,46 +21,33 @@ import pl.edu.agh.gem.internal.service.GroupAttachmentUpdateException
 @ControllerAdvice
 @Order(LOWEST_PRECEDENCE)
 class ApiExceptionHandler {
-
     @ExceptionHandler(GroupAttachmentUpdateException::class)
-    fun handleGroupAttachmentUpdateException(
-        exception: GroupAttachmentUpdateException,
-    ): ResponseEntity<SimpleErrorsHolder> {
+    fun handleGroupAttachmentUpdateException(exception: GroupAttachmentUpdateException): ResponseEntity<SimpleErrorsHolder> {
         return ResponseEntity(handleError(exception), FORBIDDEN)
     }
 
     @ExceptionHandler(UserWithoutGroupAccessException::class)
-    fun handleUserWithoutGroupAccessException(
-        exception: UserWithoutGroupAccessException,
-    ): ResponseEntity<SimpleErrorsHolder> {
+    fun handleUserWithoutGroupAccessException(exception: UserWithoutGroupAccessException): ResponseEntity<SimpleErrorsHolder> {
         return ResponseEntity(handleError(exception), FORBIDDEN)
     }
 
     @ExceptionHandler(AttachmentSizeExceededException::class)
-    fun handleAttachmentSizeExceededException(
-        exception: AttachmentSizeExceededException,
-    ): ResponseEntity<SimpleErrorsHolder> {
+    fun handleAttachmentSizeExceededException(exception: AttachmentSizeExceededException): ResponseEntity<SimpleErrorsHolder> {
         return ResponseEntity(handleError(exception), PAYLOAD_TOO_LARGE)
     }
 
     @ExceptionHandler(AttachmentContentTypeNotSupportedException::class)
-    fun handleAttachmentContentTypeNotSupportedException(
-        exception: AttachmentContentTypeNotSupportedException,
-    ): ResponseEntity<SimpleErrorsHolder> {
+    fun handleAttachmentContentTypeNotSupportedException(exception: AttachmentContentTypeNotSupportedException): ResponseEntity<SimpleErrorsHolder> {
         return ResponseEntity(handleError(exception), UNSUPPORTED_MEDIA_TYPE)
     }
 
     @ExceptionHandler(MissingGroupAttachmentException::class)
-    fun handleMissingGroupAttachmentException(
-        exception: MissingGroupAttachmentException,
-    ): ResponseEntity<SimpleErrorsHolder> {
+    fun handleMissingGroupAttachmentException(exception: MissingGroupAttachmentException): ResponseEntity<SimpleErrorsHolder> {
         return ResponseEntity(handleError(exception), NOT_FOUND)
     }
 
     @ExceptionHandler(MissingUserAttachmentException::class)
-    fun handleMissingUserAttachmentException(
-        exception: MissingUserAttachmentException,
-    ): ResponseEntity<SimpleErrorsHolder> {
+    fun handleMissingUserAttachmentException(exception: MissingUserAttachmentException): ResponseEntity<SimpleErrorsHolder> {
         return ResponseEntity(handleError(exception), NOT_FOUND)
     }
 }

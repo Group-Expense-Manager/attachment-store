@@ -10,16 +10,18 @@ data class AttachmentHistoryEntity(
     val contentType: String,
 )
 
-fun AttachmentHistoryEntity.toDomain() = AttachmentHistory(
-    updatedBy = this.updatedBy,
-    updatedAt = this.updatedAt,
-    sizeInBytes = this.sizeInBytes,
-    contentType = this.contentType,
-)
+fun AttachmentHistoryEntity.toDomain() =
+    AttachmentHistory(
+        updatedBy = this.updatedBy,
+        updatedAt = this.updatedAt,
+        sizeInBytes = this.sizeInBytes,
+        contentType = this.contentType,
+    )
 
-fun AttachmentHistory.toEntity() = AttachmentHistoryEntity(
-    updatedBy = this.updatedBy,
-    updatedAt = this.updatedAt,
-    sizeInBytes = this.sizeInBytes,
-    contentType = this.contentType,
-)
+fun AttachmentHistory.toEntity() =
+    AttachmentHistoryEntity(
+        updatedBy = this.updatedBy,
+        updatedAt = this.updatedAt,
+        sizeInBytes = this.sizeInBytes,
+        contentType = this.contentType,
+    )

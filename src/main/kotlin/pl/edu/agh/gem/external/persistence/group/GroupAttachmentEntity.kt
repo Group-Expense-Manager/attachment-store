@@ -24,28 +24,30 @@ data class GroupAttachmentEntity(
     val attachmentHistory: List<AttachmentHistoryEntity>,
 )
 
-fun GroupAttachment.toEntity() = GroupAttachmentEntity(
-    id = id,
-    groupId = groupId,
-    uploadedByUser = uploadedByUser,
-    contentType = contentType,
-    sizeInBytes = sizeInBytes,
-    file = file,
-    strictAccess = strictAccess,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-    attachmentHistory = attachmentHistory.map { it.toEntity() },
-)
+fun GroupAttachment.toEntity() =
+    GroupAttachmentEntity(
+        id = id,
+        groupId = groupId,
+        uploadedByUser = uploadedByUser,
+        contentType = contentType,
+        sizeInBytes = sizeInBytes,
+        file = file,
+        strictAccess = strictAccess,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        attachmentHistory = attachmentHistory.map { it.toEntity() },
+    )
 
-fun GroupAttachmentEntity.toDomain() = GroupAttachment(
-    id = id,
-    groupId = groupId,
-    uploadedByUser = uploadedByUser,
-    contentType = contentType,
-    sizeInBytes = sizeInBytes,
-    file = file,
-    strictAccess = strictAccess,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-    attachmentHistory = attachmentHistory.map { it.toDomain() },
-)
+fun GroupAttachmentEntity.toDomain() =
+    GroupAttachment(
+        id = id,
+        groupId = groupId,
+        uploadedByUser = uploadedByUser,
+        contentType = contentType,
+        sizeInBytes = sizeInBytes,
+        file = file,
+        strictAccess = strictAccess,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        attachmentHistory = attachmentHistory.map { it.toDomain() },
+    )

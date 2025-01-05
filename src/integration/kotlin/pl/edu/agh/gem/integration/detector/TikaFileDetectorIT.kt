@@ -20,60 +20,60 @@ import pl.edu.agh.gem.util.TestHelper.XLSX_FILE
 class TikaFileDetectorIT(
     private val fileDetector: FileDetector,
 ) : BaseIntegrationSpec({
-    should("detect correct size of file") {
-        // given
-        val data = SMALL_FILE
+        should("detect correct size of file") {
+            // given
+            val data = SMALL_FILE
 
-        // when
-        val dataSize = fileDetector.getFileSize(data)
-
-        // then
-        dataSize shouldBe data.size.toLong()
-    }
-
-    should("detect correct size of empty file") {
-        // given
-        val data = EMPTY_FILE
-
-        // when
-        val dataSize = fileDetector.getFileSize(data)
-
-        // then
-        dataSize shouldBe 0
-    }
-
-    should("throw AttachmentSizeExceededException when size is exceeded") {
-        // given
-        val data = LARGE_FILE
-
-        // when % then
-        shouldThrow<AttachmentSizeExceededException> {
-            fileDetector.getFileSize(data)
-        }
-    }
-
-    context("detect correct media type of file") {
-        withData(
-            nameFn = { (file, expectedMediaType) -> "File: $file, Expected: $expectedMediaType" },
-            Pair(SMALL_FILE, IMAGE_JPEG_VALUE),
-            Pair(PDF_FILE, APPLICATION_PDF_VALUE),
-            Pair(XLSX_FILE, XLSX_CONTENT_TYPE_VALUE),
-        ) { (file, expectedMediaType) ->
             // when
-            val mediaType = fileDetector.getFileMediaType(file, false)
+            val dataSize = fileDetector.getFileSize(data)
 
             // then
-            mediaType shouldBe expectedMediaType
+            dataSize shouldBe data.size.toLong()
         }
-    }
 
-    should("throw AttachmentContentTypeNotSupportedException when content type is not supported") {
-        // given
-        val data = CSV_FILE
+        should("detect correct size of empty file") {
+            // given
+            val data = EMPTY_FILE
 
-        // when % then
-        shouldThrow<AttachmentContentTypeNotSupportedException> {
-            fileDetector.getFileMediaType(data)
+            // when
+            val dataSize = fileDetector.getFileSize(data)
+
+            // then
+            dataSize shouldBe 0
         }
-    }
-},)
+
+        should("throw AttachmentSizeExceededException when size is exceeded") {
+            // given
+            val data = LARGE_FILE
+
+            // when % then
+            shouldThrow<AttachmentSizeExceededException> {
+                fileDetector.getFileSize(data)
+            }
+        }
+
+        context("detect correct media type of file") {
+            withData(
+                nameFn = { (file, expectedMediaType) -> "File: $file, Expected: $expectedMediaType" },
+                Pair(SMALL_FILE, IMAGE_JPEG_VALUE),
+                Pair(PDF_FILE, APPLICATION_PDF_VALUE),
+                Pair(XLSX_FILE, XLSX_CONTENT_TYPE_VALUE),
+            ) { (file, expectedMediaType) ->
+                // when
+                val mediaType = fileDetector.getFileMediaType(file, false)
+
+                // then
+                mediaType shouldBe expectedMediaType
+            }
+        }
+
+        should("throw AttachmentContentTypeNotSupportedException when content type is not supported") {
+            // given
+            val data = CSV_FILE
+
+            // when % then
+            shouldThrow<AttachmentContentTypeNotSupportedException> {
+                fileDetector.getFileMediaType(data)
+            }
+        }
+    })

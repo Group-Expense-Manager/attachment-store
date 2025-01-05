@@ -8,15 +8,19 @@ import org.springframework.stereotype.Repository
 import pl.edu.agh.gem.internal.model.UserAttachment
 import pl.edu.agh.gem.internal.persistence.MissingUserAttachmentException
 import pl.edu.agh.gem.internal.persistence.UserAttachmentRepository
+import pl.edu.agh.gem.metrics.MeteredRepository
 
 @Repository
+@MeteredRepository
 class MongoUserAttachmentRepository(private val mongo: MongoTemplate) : UserAttachmentRepository {
-
     override fun save(userAttachment: UserAttachment): UserAttachment {
         return mongo.save(userAttachment.toEntity()).toDomain()
     }
 
-    override fun getUserAttachment(attachmentId: String, userId: String): UserAttachment {
+    override fun getUserAttachment(
+        attachmentId: String,
+        userId: String,
+    ): UserAttachment {
         val query = query(where(UserAttachmentEntity::id.name).isEqualTo(attachmentId).and(UserAttachmentEntity::userId.name).isEqualTo(userId))
         return mongo.findOne(query, UserAttachmentEntity::class.java)?.toDomain() ?: throw MissingUserAttachmentException(attachmentId, userId)
     }

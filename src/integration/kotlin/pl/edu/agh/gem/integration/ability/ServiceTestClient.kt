@@ -15,11 +15,16 @@ import java.net.URI
 @Component
 @Lazy
 class ServiceTestClient(applicationContext: WebApplicationContext) {
-    private val webClient = bindToApplicationContext(applicationContext)
-        .configureClient()
-        .build()
+    private val webClient =
+        bindToApplicationContext(applicationContext)
+            .configureClient()
+            .build()
 
-    fun createGroupAttachment(body: Any?, user: GemUser, groupId: String): ResponseSpec {
+    fun createGroupAttachment(
+        body: Any,
+        user: GemUser,
+        groupId: String,
+    ): ResponseSpec {
         return webClient.post()
             .uri(URI("$EXTERNAL/groups/$groupId"))
             .headers { it.withValidatedUser(user) }
@@ -27,21 +32,33 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
             .exchange()
     }
 
-    fun getGroupAttachment(user: GemUser, groupId: String, attachmentId: String): ResponseSpec {
+    fun getGroupAttachment(
+        user: GemUser,
+        groupId: String,
+        attachmentId: String,
+    ): ResponseSpec {
         return webClient.get()
             .uri(URI("$EXTERNAL/groups/$groupId/attachments/$attachmentId"))
             .headers { it.withValidatedUser(user) }
             .exchange()
     }
 
-    fun generateGroupAttachment(userId: String, groupId: String): ResponseSpec {
+    fun generateGroupAttachment(
+        userId: String,
+        groupId: String,
+    ): ResponseSpec {
         return webClient.post()
             .uri(URI("$INTERNAL/groups/$groupId/users/$userId/generate"))
             .headers { it.withAppAcceptType() }
             .exchange()
     }
 
-    fun updateGroupAttachment(body: Any?, user: GemUser, attachmentId: String, groupId: String): ResponseSpec {
+    fun updateGroupAttachment(
+        body: Any,
+        user: GemUser,
+        attachmentId: String,
+        groupId: String,
+    ): ResponseSpec {
         return webClient.put()
             .uri(URI("$EXTERNAL/groups/$groupId/attachments/$attachmentId"))
             .headers { it.withValidatedUser(user) }
@@ -49,7 +66,10 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
             .exchange()
     }
 
-    fun createUserAttachment(body: Any?, user: GemUser): ResponseSpec {
+    fun createUserAttachment(
+        body: Any,
+        user: GemUser,
+    ): ResponseSpec {
         return webClient.post()
             .uri(URI("$EXTERNAL/users/"))
             .headers { it.withValidatedUser(user) }
@@ -57,7 +77,10 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
             .exchange()
     }
 
-    fun getUserAttachment(userId: String, attachmentId: String): ResponseSpec {
+    fun getUserAttachment(
+        userId: String,
+        attachmentId: String,
+    ): ResponseSpec {
         return webClient.get()
             .uri(URI("$EXTERNAL/users/$userId/attachments/$attachmentId"))
             .exchange()
@@ -69,7 +92,11 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
             .exchange()
     }
 
-    fun updateUserAttachment(body: Any?, user: GemUser, attachmentId: String): ResponseSpec {
+    fun updateUserAttachment(
+        body: Any,
+        user: GemUser,
+        attachmentId: String,
+    ): ResponseSpec {
         return webClient.put()
             .uri(URI("$EXTERNAL/users/attachments/$attachmentId"))
             .headers { it.withValidatedUser(user) }
@@ -77,21 +104,31 @@ class ServiceTestClient(applicationContext: WebApplicationContext) {
             .exchange()
     }
 
-    fun generateGroupBlankAttachment(userId: String, groupId: String): ResponseSpec {
+    fun generateGroupBlankAttachment(
+        userId: String,
+        groupId: String,
+    ): ResponseSpec {
         return webClient.post()
             .uri(URI("$INTERNAL/groups/$groupId/users/$userId/generate/blank"))
             .headers { it.withAppAcceptType() }
             .exchange()
     }
 
-    fun createInternalGroupAttachment(body: Any?, userId: String, groupId: String): ResponseSpec {
+    fun createInternalGroupAttachment(
+        body: Any,
+        userId: String,
+        groupId: String,
+    ): ResponseSpec {
         return webClient.post()
             .uri(URI("$INTERNAL/groups/$groupId?userId=$userId"))
             .bodyValue(body)
             .exchange()
     }
 
-    fun getInternalGroupAttachment(groupId: String, attachmentId: String): ResponseSpec {
+    fun getInternalGroupAttachment(
+        groupId: String,
+        attachmentId: String,
+    ): ResponseSpec {
         return webClient.get()
             .uri(URI("$INTERNAL/groups/$groupId/attachments/$attachmentId"))
             .exchange()
