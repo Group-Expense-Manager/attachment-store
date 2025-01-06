@@ -19,6 +19,7 @@ plugins {
     alias(tools.plugins.scmversion)
     alias(tools.plugins.kotlin.jvm)
     alias(tools.plugins.kotlin.spring)
+    id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
 }
 
 application {
@@ -184,4 +185,10 @@ detekt {
     buildUponDefaultConfig = false
     autoCorrect = true
     config.setFrom("$projectDir/config/detekt/detekt.yml")
+}
+
+openApi {
+//    apiDocsUrl.set("https://localhost:9000/api/docs.yaml")
+//    outputDir.set(file("$buildDir/docs"))
+//    outputFileName.set("swagger.yaml")
 }

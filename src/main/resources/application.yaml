@@ -68,3 +68,10 @@ group-manager:
   url: "group/manager/some/url"
   read-timeout: 1000ms
   connect-timeout: 1000ms
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    url: /openapi.yaml
+  api-docs:
+    path: /v3/api-docs

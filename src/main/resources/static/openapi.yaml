@@ -1,0 +1,670 @@
+openapi: 3.0.1
+info:
+  title: Attachment API
+  version: v1
+  description: API for managing user and group attachments.
+servers:
+  - url: http://localhost:8080
+    description: Development server
+paths:
+  /external/users/attachments/{attachmentId}:
+    put:
+      tags:
+        - External User
+      operationId: updateAttachment
+      summary: Update an existing user attachment.
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The ID of the user.
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the attachment.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              format: byte
+            examples:
+              exampleAttachment:
+                value: 'BASE64_ENCODED_ATTACHMENT_DATA'
+        required: true
+        description: The updated attachment data (Base64 encoded).
+      responses:
+        '200':
+          description: Attachment updated successfully.
+          content:
+            application/vnd.gem.internal.v1+json:
+              schema:
+                $ref: '#/components/schemas/UserAttachmentResponse'
+              examples:
+                exampleResponse:
+                  value:
+                    id: 'updated-attachment-id'
+        '404':
+          description: User or attachment not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                MissingUserAttachmentException:
+                  value:
+                    code: MissingUserAttachmentException
+                    message: The user attachment could not be found.
+        '400':
+          description: Invalid attachment data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden, likely due to permission issues.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                GroupAttachmentUpdateException:
+                  value:
+                    code: GroupAttachmentUpdateException
+                    message: Failed to update the group attachment.
+                UserWithoutGroupAccessException:
+                  value:
+                    code: UserWithoutGroupAccessException
+                    message: User cannot access this group attachment.
+
+  /external/groups/{groupId}/attachments/{attachmentId}:
+    get:
+      tags:
+        - External Group
+      operationId: getAttachment
+      summary: Get a group attachment.
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The ID of the user requesting the attachment.
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the group.
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the attachment.
+      responses:
+        '200':
+          description: Attachment retrieved successfully.
+          content:
+            application/vnd.gem.internal.v1+json:
+              schema:
+                type: string
+                format: byte
+                # Example of what the response data might look like:
+                example: 'BASE64_ENCODED_ATTACHMENT_DATA'
+        '404':
+          description: Group or attachment not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                MissingGroupAttachmentException:
+                  value:
+                    code: MissingGroupAttachmentException
+                    message: The group attachment could not be found.
+        '403':
+          description: User does not have permission to access the attachment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                UserWithoutGroupAccessException:
+                  value:
+                    code: UserWithoutGroupAccessException
+                    message: User cannot access this group attachment.
+    put:
+      tags:
+        - External Group
+      operationId: updateGroupAttachment
+      summary: Update an existing group attachment.
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The ID of the user.
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the group.
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the attachment.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              format: byte
+            examples:
+              exampleAttachment:
+                value: 'BASE64_ENCODED_ATTACHMENT_DATA'
+        required: true
+        description: The updated attachment data (Base64 encoded).
+      responses:
+        '200':
+          description: Attachment updated successfully.
+          content:
+            application/vnd.gem.internal.v1+json:
+              schema:
+                $ref: '#/components/schemas/GroupAttachmentResponse'
+              examples:
+                exampleResponse:
+                  value:
+                    id: 'updated-group-attachment-id'
+        '404':
+          description: Group or attachment not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                MissingGroupAttachmentException:
+                  value:
+                    code: MissingGroupAttachmentException
+                    message: The group attachment could not be found.
+        '400':
+          description: Invalid attachment data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                AttachmentSizeExceededException:
+                  value:
+                    code: AttachmentSizeExceededException
+                    message: Attachment size exceeds the allowed limit.
+                AttachmentContentTypeNotSupportedException:
+                  value:
+                    code: AttachmentContentTypeNotSupportedException
+                    message: Attachment content type is not supported.
+        '403':
+          description: Forbidden, likely due to permission issues.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                GroupAttachmentUpdateException:
+                  value:
+                    code: GroupAttachmentUpdateException
+                    message: Failed to update the group attachment.
+                UserWithoutGroupAccessException:
+                  value:
+                    code: UserWithoutGroupAccessException
+                    message: User cannot access this group attachment.
+
+  /internal/users/{userId}/generate:
+    post:
+      tags:
+        - Internal User
+      operationId: generateUserAttachment
+      summary: Generate a new user attachment.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the user.
+      responses:
+        '201':
+          description: Attachment generated successfully.
+          content:
+            application/vnd.gem.internal.v1+json:
+              schema:
+                $ref: '#/components/schemas/UserAttachmentResponse'
+              examples:
+                exampleResponse:
+                  value:
+                    id: 'generated-user-attachment-id'
+        '500':
+          description: Error generating attachment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /internal/groups/{groupId}:
+    post:
+      tags:
+        - Internal Group
+      operationId: saveGroupAttachment
+      summary: Save a new group attachment.
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the group.
+        - name: strictAccess
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Whether to enforce strict access control for the attachment.
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The ID of the user saving the attachment.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              format: byte
+            examples:
+              exampleAttachment:
+                value: 'BASE64_ENCODED_ATTACHMENT_DATA'
+        required: true
+        description: The attachment data (Base64 encoded).
+      responses:
+        '201':
+          description: Attachment saved successfully.
+          content:
+            application/vnd.gem.internal.v1+json:
+              schema:
+                $ref: '#/components/schemas/GroupAttachmentResponse'
+              examples:
+                exampleResponse:
+                  value:
+                    id: 'saved-group-attachment-id'
+        '400':
+          description: Invalid attachment data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                AttachmentSizeExceededException:
+                  value:
+                    code: AttachmentSizeExceededException
+                    message: Attachment size exceeds the allowed limit.
+                AttachmentContentTypeNotSupportedException:
+                  value:
+                    code: AttachmentContentTypeNotSupportedException
+                    message: Attachment content type is not supported.
+        '403':
+          description: Forbidden, likely due to permission issues.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                GroupAttachmentUpdateException:
+                  value:
+                    code: GroupAttachmentUpdateException
+                    message: Failed to update the group attachment.
+                UserWithoutGroupAccessException:
+                  value:
+                    code: UserWithoutGroupAccessException
+                    message: User cannot access this group attachment.
+
+  /internal/groups/{groupId}/users/{userId}/generate:
+    post:
+      tags:
+        - Internal Group
+      operationId: generateGroupAttachment
+      summary: Generate a new group attachment for a specific user.
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the group.
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the user.
+      responses:
+        '201':
+          description: Attachment generated successfully.
+          content:
+            application/vnd.gem.internal.v1+json:
+              schema:
+                $ref: '#/components/schemas/GroupAttachmentResponse'
+              examples:
+                exampleResponse:
+                  value:
+                    id: 'generated-group-attachment-id'
+        '500':
+          description: Error generating attachment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /internal/groups/{groupId}/users/{userId}/generate/blank:
+    post:
+      tags:
+        - Internal Group
+      operationId: generateBlankGroupAttachment
+      summary: Generate a new blank group attachment for a specific user.
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the group.
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the user.
+      responses:
+        '201':
+          description: Attachment generated successfully.
+          content:
+            application/vnd.gem.internal.v1+json:
+              schema:
+                $ref: '#/components/schemas/GroupAttachmentResponse'
+              examples:
+                exampleResponse:
+                  value:
+                    id: 'generated-blank-group-attachment-id'
+        '500':
+          description: Error generating attachment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /external/users/:
+    post:
+      tags:
+        - External User
+      operationId: saveUserAttachment
+      summary: Save a new user attachment.
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The ID of the user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              format: byte
+            examples:
+              exampleAttachment:
+                value: 'BASE64_ENCODED_ATTACHMENT_DATA'
+        required: true
+        description: The attachment data (Base64 encoded).
+      responses:
+        '201':
+          description: Attachment saved successfully.
+          content:
+            application/vnd.gem.internal.v1+json:
+              schema:
+                $ref: '#/components/schemas/UserAttachmentResponse'
+              examples:
+                exampleResponse:
+                  value:
+                    id: 'saved-user-attachment-id'
+        '400':
+          description: Invalid attachment data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                AttachmentSizeExceededException:
+                  value:
+                    code: AttachmentSizeExceededException
+                    message: Attachment size exceeds the allowed limit.
+                AttachmentContentTypeNotSupportedException:
+                  value:
+                    code: AttachmentContentTypeNotSupportedException
+                    message: Attachment content type is not supported.
+        '403':
+          description: Forbidden, likely due to permission issues.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                GroupAttachmentUpdateException:
+                  value:
+                    code: GroupAttachmentUpdateException
+                    message: Failed to update the group attachment.
+                UserWithoutGroupAccessException:
+                  value:
+                    code: UserWithoutGroupAccessException
+                    message: User cannot access this group attachment.
+
+  /external/groups/{groupId}:
+    post:
+      tags:
+        - External Group
+      operationId: saveGroupAttachmentToGroup
+      summary: Save a new group attachment to a specific group.
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The ID of the user saving the attachment.
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the group.
+        - name: strictAccess
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Whether to enforce strict access control for the attachment.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              format: byte
+            examples:
+              exampleAttachment:
+                value: 'BASE64_ENCODED_ATTACHMENT_DATA'
+        required: true
+        description: The attachment data (Base64 encoded).
+      responses:
+        '201':
+          description: Attachment saved successfully.
+          content:
+            application/vnd.gem.internal.v1+json:
+              schema:
+                $ref: '#/components/schemas/GroupAttachmentResponse'
+              examples:
+                exampleResponse:
+                  value:
+                    id: 'saved-group-attachment-to-group-id'
+        '400':
+          description: Invalid attachment data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                AttachmentSizeExceededException:
+                  value:
+                    code: AttachmentSizeExceededException
+                    message: Attachment size exceeds the allowed limit.
+                AttachmentContentTypeNotSupportedException:
+                  value:
+                    code: AttachmentContentTypeNotSupportedException
+                    message: Attachment content type is not supported.
+        '403':
+          description: Forbidden, likely due to permission issues.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                GroupAttachmentUpdateException:
+                  value:
+                    code: GroupAttachmentUpdateException
+                    message: Failed to update the group attachment.
+                UserWithoutGroupAccessException:
+                  value:
+                    code: UserWithoutGroupAccessException
+                    message: User cannot access this group attachment.
+
+  /internal/groups/{groupId}/attachments/{attachmentId}:
+    get:
+      tags:
+        - Internal Group
+      operationId: getInternalGroupAttachment
+      summary: Get a group attachment (internal).
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the group.
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the attachment.
+      responses:
+        '200':
+          description: Attachment retrieved successfully.
+          content:
+            application/vnd.gem.internal.v1+json:
+              schema:
+                type: string
+                format: byte
+                example: 'BASE64_ENCODED_ATTACHMENT_DATA'
+        '404':
+          description: Group or attachment not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                MissingGroupAttachmentException:
+                  value:
+                    code: MissingGroupAttachmentException
+                    message: The group attachment could not be found.
+
+  /external/users/{userId}/attachments/{attachmentId}:
+    get:
+      tags:
+        - External User
+      operationId: getUserAttachment
+      summary: Get a user attachment.
+      parameters:
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the attachment.
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the user.
+      responses:
+        '200':
+          description: Attachment retrieved successfully.
+          content:
+            application/vnd.gem.internal.v1+json:
+              schema:
+                type: string
+                format: byte
+                example: 'BASE64_ENCODED_ATTACHMENT_DATA'
+        '404':
+          description: User or attachment not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                MissingUserAttachmentException:
+                  value:
+                    code: MissingUserAttachmentException
+                    message: The user attachment could not be found.
+
+components:
+  parameters:
+    UserId:
+      name: userId
+      in: query
+      required: true
+      schema:
+        type: string
+      description: The ID of the user.
+  schemas:
+    UserAttachmentResponse:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the attachment.
+    GroupAttachmentResponse:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the attachment.
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: An error code.
+        message:
+          type: string
+          description: A human-readable error message.
