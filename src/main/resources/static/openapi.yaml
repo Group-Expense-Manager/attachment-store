@@ -1,0 +1,415 @@
+openapi: 3.0.1
+info:
+  title: Attachment API
+  version: v1
+  description: API for managing user and group attachments.
+
+paths:
+  /internal/users/{userId}/generate:
+    post:
+      tags:
+        - Internal User
+      summary: "Generate user default image"
+      description: "Generate a default image for the given user."
+      operationId: "saveAttachment"
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        "201":
+          $ref: '#/components/responses/UserAttachmentResponse'
+  /internal/groups/{groupId}:
+    post:
+      tags:
+        - Internal Group
+      summary: "Save group attachment"
+      description: "Save an attachment for the given group."
+      operationId: "saveAttachment"
+      parameters:
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/StrictAccess'
+      requestBody:
+        $ref: "#/components/requestBodies/ByteArrayRequest"
+      responses:
+        "201":
+          $ref: '#/components/responses/GroupAttachmentResponse'
+        "413":
+          $ref: '#/components/responses/AttachmentSizeExceededException'
+        "415":
+          $ref: '#/components/responses/AttachmentContentTypeNotSupportedException'
+  /internal/groups/{groupId}/attachments/{attachmentId}:
+    get:
+      tags:
+        - Internal Group
+      summary: "Retrieve a group attachment"
+      description: "Retrieves the specified attachment for the given group."
+      operationId: "getAttachment"
+      parameters:
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/AttachmentId'
+      responses:
+        "200":
+          $ref: '#/components/responses/ByteArrayResponse'
+        "404":
+          $ref: '#/components/responses/MissingGroupAttachmentException'
+  /internal/groups/{groupId}/users/{userId}/generate:
+    post:
+      tags:
+        - Internal Group
+      summary: "Generate group default image"
+      description: "Generates a default image for the given group."
+      operationId: "generateAttachment"
+      parameters:
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        "201":
+          $ref: '#/components/responses/GroupAttachmentResponse'
+  /internal/groups/{groupId}/users/{userId}/generate/blank:
+    post:
+      tags:
+        - Internal Group
+      summary: "Generate blank attachment"
+      description: "Generate a blank expense/payment attachment for the given group."
+      operationId: "generateBlankAttachment"
+      parameters:
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        "201":
+          $ref: '#/components/responses/GroupAttachmentResponse'
+  /external/groups/{groupId}:
+    post:
+      tags:
+        - External Group
+      summary: "Upload group attachment by user"
+      description: "Uploads an attachment for the given group."
+      operationId: "saveAttachment"
+      parameters:
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/StrictAccess'
+      requestBody:
+        $ref: '#/components/requestBodies/ByteArrayRequest'
+      responses:
+        "201":
+          $ref: '#/components/responses/GroupAttachmentResponse'
+        "403":
+          $ref: '#/components/responses/UserWithoutGroupAccessException'
+        "413":
+          $ref: '#/components/responses/AttachmentSizeExceededException'
+        "415":
+          $ref: '#/components/responses/AttachmentContentTypeNotSupportedException'
+  /external/groups/{groupId}/attachments/{attachmentId}:
+    get:
+      tags:
+        - External Group
+      summary: "Retrieve a group attachment by user"
+      description: "Retrieves the specified attachment for the given group."
+      operationId: "getAttachment"
+      parameters:
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/AttachmentId'
+      responses:
+        "200":
+          $ref: '#/components/responses/ByteArrayResponse'
+        "403":
+          $ref: '#/components/responses/UserWithoutGroupAccessException'
+        "404":
+          $ref: '#/components/responses/MissingGroupAttachmentException'
+    put:
+      tags:
+        - External Group
+      summary: "Update group attachment by user"
+      description: "Updates the specified attachment for the given group."
+      operationId: "updateAttachment"
+      parameters:
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/AttachmentId'
+      requestBody:
+        $ref: '#/components/requestBodies/ByteArrayRequest'
+      responses:
+        "200":
+          $ref: '#/components/responses/GroupAttachmentResponse'
+        "403":
+          $ref: '#/components/responses/UserWithoutGroupAccessException'
+        "404":
+          $ref: '#/components/responses/MissingGroupAttachmentException'
+        "413":
+          $ref: '#/components/responses/AttachmentSizeExceededException'
+        "415":
+          $ref: '#/components/responses/AttachmentContentTypeNotSupportedException'
+  /external/users/:
+    post:
+      tags:
+        - External User
+      summary: "Upload user attachment by user"
+      description: "Uploads an attachment for the given user."
+      operationId: "saveAttachment"
+      requestBody:
+        $ref: '#/components/requestBodies/ByteArrayRequest'
+      responses:
+        "201":
+          $ref: '#/components/responses/UserAttachmentResponse'
+        "403":
+          $ref: '#/components/responses/UserWithoutGroupAccessException'
+        "413":
+          $ref: '#/components/responses/AttachmentSizeExceededException'
+        "415":
+          $ref: '#/components/responses/AttachmentContentTypeNotSupportedException'
+  /external/users/attachments/{attachmentId}:
+    put:
+      tags:
+        - External User
+      summary: "Update user attachment by user"
+      description: "Updates the specified attachment for the given user."
+      operationId: "updateAttachment"
+      parameters:
+        - $ref: '#/components/parameters/AttachmentId'
+      requestBody:
+        $ref: '#/components/requestBodies/ByteArrayRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/UserAttachmentResponse'
+        "403":
+          $ref: '#/components/responses/UserWithoutGroupAccessException'
+        "404":
+          $ref: '#/components/responses/MissingUserAttachmentException'
+        "413":
+          $ref: '#/components/responses/AttachmentSizeExceededException'
+        "415":
+          $ref: '#/components/responses/AttachmentContentTypeNotSupportedException'
+  /external/users/{userId}/attachments/{attachmentId}:
+    get:
+      tags:
+        - External User
+      summary: "Retrieve a user attachment by user"
+      description: "Fetches the specified attachment for a user."
+      operationId: "getAttachment"
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/AttachmentId'
+      responses:
+        "200":
+          $ref: '#/components/responses/ByteArrayResponse'
+        "404":
+          $ref: '#/components/responses/MissingUserAttachmentException'
+
+components:
+  parameters:
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        example: "0ddfc155-ad49-47af-a787-af03b0be9a12"
+      description: The ID of the user.
+    GroupId:
+      name: groupId
+      in: path
+      required: true
+      schema:
+        type: string
+        example: "53f34d91-0172-4674-af73-813a666de1a9"
+      description: The ID of the group.
+    AttachmentId:
+      name: attachmentId
+      in: path
+      required: true
+      schema:
+        type: string
+        example: "c224f4a2-625e-42fb-9306-5f81aa817293"
+      description: The ID of the attachment.
+    StrictAccess:
+      name: strictAccess
+      in: query
+      required: false
+      schema:
+        type: boolean
+        example: false
+      description: Whether to enforce strict access control.
+
+  requestBodies:
+    ByteArrayRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: string
+            format: byte
+          examples:
+            exampleAttachment:
+              value: "BASE64_ENCODED_ATTACHMENT_DATA"
+
+  responses:
+    ByteArrayResponse:
+      description: Attachment ByteArray.
+      content:
+        application/+json:
+          schema:
+            $ref: '#/components/schemas/ByteArrayResponse'
+          examples:
+            exampleByteArrayResponse:
+              value: "BASE64_ENCODED_ATTACHMENT_DATA"
+    UserAttachmentResponse:
+      description: User attachment response.
+      content:
+        application/vnd.gem.internal.v1+json:
+          schema:
+            $ref: '#/components/schemas/UserAttachmentResponse'
+          examples:
+            exampleUserAttachmentResponse:
+              value:
+                id: "94d93de-9cf2-4f00-8a48-d1c7a8ef0200"
+    GroupAttachmentResponse:
+      description: User attachment response.
+      content:
+        application/vnd.gem.internal.v1+json:
+          schema:
+            $ref: '#/components/schemas/GroupAttachmentResponse'
+          examples:
+            exampleGroupAttachmentResponse:
+              value:
+                id: "94d93de-9cf2-4f00-8a48-d1c7a8ef0200"
+    GroupAttachmentUpdateException:
+      description: User is not allowed to update attachment
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SimpleErrorsHolder'
+          examples:
+            exampleGroupAttachmentUpdateException:
+              value:
+                errors:
+                  - code: "GroupAttachmentUpdateException"
+                    details: "GroupAttachmentUpdateException"
+                    message: "User $userId is not allowed to update attachment"
+                    userMessage: "User $userId is not allowed to update attachment"
+    UserWithoutGroupAccessException:
+      description: User is not a member of the group
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SimpleErrorsHolder'
+          examples:
+            exampleUserWithoutGroupAccessException:
+              value:
+                errors:
+                  - code: "UserWithoutGroupAccessException"
+                    details: "UserWithoutGroupAccessException"
+                    message: "User with id:$userId is not a member of the group"
+                    userMessage: "UUser with id:$userId is not a member of the group"
+    AttachmentSizeExceededException:
+      description: Attachment exceeds the size limit
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SimpleErrorsHolder'
+          examples:
+            exampleAttachmentSizeExceededException:
+              value:
+                errors:
+                  - code: "AttachmentSizeExceededException"
+                    details: "AttachmentSizeExceededException"
+                    message: "Attachment size:$size exceeds the limit"
+                    userMessage: "Attachment size:$size exceeds the limit"
+    AttachmentContentTypeNotSupportedException:
+      description: Attachment content type is not supported
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SimpleErrorsHolder'
+          examples:
+            exampleAttachmentContentTypeNotSupportedException:
+              value:
+                errors:
+                  - code: "AttachmentContentTypeNotSupportedException"
+                    details: "AttachmentContentTypeNotSupportedException"
+                    message: "Attachment content type:$contentType is not supported"
+                    userMessage: "Attachment content type:$contentType is not supported"
+    MissingGroupAttachmentException:
+      description: Group attachment dont exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SimpleErrorsHolder'
+          examples:
+            exampleMissingGroupAttachmentException:
+              value:
+                errors:
+                  - code: "MissingGroupAttachmentException"
+                    details: "MissingGroupAttachmentException"
+                    message: "Attachment with id:$attachmentId in group:$groupId not found"
+                    userMessage: "Attachment with id:$attachmentId in group:$groupId not found"
+    MissingUserAttachmentException:
+      description: User attachment dont exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SimpleErrorsHolder'
+          examples:
+            exampleMissingUserAttachmentException:
+              value:
+                errors:
+                  - code: "MissingUserAttachmentException"
+                    details: "MissingUserAttachmentException"
+                    message: "Attachment with id: $attachmentId for userId: $userId not found"
+                    userMessage: "Attachment with id: $attachmentId for userId: $userId not found"
+
+  schemas:
+    ByteArrayResponse:
+      type: string
+      format: binary
+      description: Represents a binary file, such as an attachment.
+    ByteArrayRequest:
+      type: string
+      format: binary
+      description: Represents a binary file, such as an attachment.
+    UserAttachmentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the attachment.
+          example: "94d93de-9cf2-4f00-8a48-d1c7a8ef0200"
+    GroupAttachmentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the attachment.
+          example: "94d93de-9cf2-4f00-8a48-d1c7a8ef0200"
+    SimpleErrorsHolder:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                nullable: true
+                description: Error code.
+                example: "INVALID_VALUE"
+              message:
+                type: string
+                nullable: true
+                description: Error message.
+                example: "The provided value is invalid."
+              details:
+                type: string
+                nullable: true
+                description: Additional error details.
+                example: "The field 'email' must contain a valid email address."
+              path:
+                type: string
+                nullable: true
+                description: The API path related to the error.
+                example: "/external/users/{userId}/attachments/{attachmentId}"
+              userMessage:
+                type: string
+                nullable: true
+                description: A user-friendly error message.
+                example: "Please provide a valid email address."
