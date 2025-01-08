@@ -29,7 +29,7 @@ paths:
         - $ref: '#/components/parameters/UserId'
         - $ref: '#/components/parameters/StrictAccess'
       requestBody:
-        $ref: "#/components/responses/ByteArrayResponse"
+        $ref: "#/components/requestBodies/ByteArrayRequest"
       responses:
         "201":
           $ref: '#/components/responses/GroupAttachmentResponse'
@@ -199,7 +199,7 @@ components:
   parameters:
     UserId:
       name: userId
-      in: query
+      in: path
       required: true
       schema:
         type: string
@@ -279,7 +279,7 @@ components:
           schema:
             $ref: '#/components/schemas/SimpleErrorsHolder'
           examples:
-            exampleNotFound:
+            exampleGroupAttachmentUpdateException:
               value:
                 errors:
                   - code: "GroupAttachmentUpdateException"
@@ -293,7 +293,7 @@ components:
           schema:
             $ref: '#/components/schemas/SimpleErrorsHolder'
           examples:
-            exampleNotFound:
+            exampleUserWithoutGroupAccessException:
               value:
                 errors:
                   - code: "UserWithoutGroupAccessException"
@@ -307,7 +307,7 @@ components:
           schema:
             $ref: '#/components/schemas/SimpleErrorsHolder'
           examples:
-            exampleNotFound:
+            exampleAttachmentSizeExceededException:
               value:
                 errors:
                   - code: "AttachmentSizeExceededException"
@@ -321,7 +321,7 @@ components:
           schema:
             $ref: '#/components/schemas/SimpleErrorsHolder'
           examples:
-            exampleNotFound:
+            exampleAttachmentContentTypeNotSupportedException:
               value:
                 errors:
                   - code: "AttachmentContentTypeNotSupportedException"
@@ -335,7 +335,7 @@ components:
           schema:
             $ref: '#/components/schemas/SimpleErrorsHolder'
           examples:
-            exampleNotFound:
+            exampleMissingGroupAttachmentException:
               value:
                 errors:
                   - code: "MissingGroupAttachmentException"
@@ -349,7 +349,7 @@ components:
           schema:
             $ref: '#/components/schemas/SimpleErrorsHolder'
           examples:
-            exampleNotFound:
+            exampleMissingUserAttachmentException:
               value:
                 errors:
                   - code: "MissingUserAttachmentException"
